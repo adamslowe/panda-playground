@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <title>PandaPlay - The Roly-Poly Slide</title>
+        <script>
+            (function () {
+                try {
+                    var style = document.createElement("style");
+                    style.innerHTML = "[data-hide] {opacity:0;}";
+                    document.querySelector("head").appendChild(style);
+                } catch (e) {
+                    console && console.log(e);
+                }
+            })();
+        </script>
+        <link href="tailwind_theme/tailwind.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="font-sans text-gray-800 bg-white antialiased">
+        <!-- Navbar -->
+        <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/90 shadow-xs" data-pgc="mainNav">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <a
+                        href="index.html"
+                        class="shrink-0 flex items-center gap-2 transition-transform hover:scale-105 duration-300"
+                    >
+                        <svg
+                            class="w-8 h-8 text-green-500"
+                            viewBox="0 0 24 24"
+                            xmlns
+                            version
+                            xml:space
+                            fill="currentColor"
+                            stroke
+                        >
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm4 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-2 4c-1.66 0-3-1.34-3-3h6c0 1.66-1.34 3-3 3z"
+                            />
+                        </svg>
+                        <span class="font-display font-bold text-2xl text-gray-900">PandaPlay</span>
+                    </a>
+                    <div class="hidden md:flex space-x-8 items-center">
+                        <a
+                            href="index.html#why-play"
+                            class="text-gray-600 hover:text-green-600 font-medium transition-colors"
+                            >Why Play Matters</a
+                        >
+                        <a href="catalog.html" class="text-gray-600 hover:text-green-600 font-medium transition-colors"
+                            >Catalog</a
+                        >
+                        <a
+                            href="index.html#sanctuaries"
+                            class="text-gray-600 hover:text-green-600 font-medium transition-colors"
+                            >Sanctuaries</a
+                        >
+                        <a
+                            href="catalog.html"
+                            class="bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-full font-bold shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+                            >Browse Catalog</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Hero Section -->
+        <section class="pt-16 pb-12 bg-gradient-to-b from-pink-50 to-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8">
+                    <span class="text-pink-600 font-bold tracking-wider uppercase text-sm mb-2 block"
+                        >Featured Playground</span
+                    >
+                    <h1
+                        data-hide
+                        class="reveal font-display text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight mb-6"
+                    >
+                        The Roly-Poly Slide
+                    </h1>
+                    <p data-hide class="reveal text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                        A gentle, wide slide specifically angled for panda comfort. Includes soft-landing zones and
+                        integrated puzzle feeders at the bottom to encourage repeated play and joyful tumbling.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!-- Why Play Matters Section -->
+        <section class="py-20 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+                    <div data-hide class="reveal rounded-[2.5rem] overflow-hidden shadow-xl relative h-96">
+                        <img
+                            src="images/roly_poly_slide.jpeg"
+                            alt="Panda on Roly-Poly Slide"
+                            class="w-full h-full object-cover"
+                        />
+                        <div class="absolute inset-0 bg-green-900/10 mix-blend-multiply rounded-[2.5rem]"></div>
+                    </div>
+                    <div data-hide class="reveal">
+                        <h2 class="font-display text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                            Designed for Safe Tumbling
+                        </h2>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Our Roly-Poly Slide is engineered with a low-friction, padded surface that allows pandas to
+                            glide effortlessly without straining their joints. The wide base accommodates group play,
+                            fostering social interaction among residents.
+                        </p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3">
+                                <div
+                                    class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0 mt-1"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="3"
+                                            d="M5 13l4 4L19 7"
+                                        ></path>
+                                    </svg>
+                                </div>
+                                <span class="text-gray-700">Ergonomic 30-degree angle for comfortable sliding</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div
+                                    class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0 mt-1"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="3"
+                                            d="M5 13l4 4L19 7"
+                                        ></path>
+                                    </svg>
+                                </div>
+                                <span class="text-gray-700"
+                                    >Impact-absorbing landing zone with natural moss and sand</span
+                                >
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div
+                                    class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0 mt-1"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="3"
+                                            d="M5 13l4 4L19 7"
+                                        ></path>
+                                    </svg>
+                                </div>
+                                <span class="text-gray-700">Built-in bamboo treat dispensers to reward play</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                    <div
+                        data-hide
+                        class="reveal bg-gray-50 p-8 rounded-3xl text-center hover:bg-green-50 transition-colors"
+                    >
+                        <div class="text-4xl font-display font-bold text-green-600 mb-2">4m</div>
+                        <div class="text-gray-600 font-medium">Total Length</div>
+                    </div>
+                    <div
+                        data-hide
+                        class="reveal bg-gray-50 p-8 rounded-3xl text-center hover:bg-amber-50 transition-colors delay-100"
+                    >
+                        <div class="text-4xl font-display font-bold text-amber-600 mb-2">2m</div>
+                        <div class="text-gray-600 font-medium">Width Capacity</div>
+                    </div>
+                    <div
+                        data-hide
+                        class="reveal bg-gray-50 p-8 rounded-3xl text-center hover:bg-pink-50 transition-colors delay-200"
+                    >
+                        <div class="text-4xl font-display font-bold text-pink-600 mb-2">500kg</div>
+                        <div class="text-gray-600 font-medium">Max Load</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Featured Playgrounds Section -->
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 data-hide class="reveal font-display text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        See It In Action
+                    </h2>
+                    <p data-hide class="reveal text-lg text-gray-600">
+                        Watch how pandas interact with the Roly-Poly Slide in our partner sanctuaries.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div data-hide class="reveal h-64 rounded-3xl overflow-hidden bg-green-100">
+                        <img
+                            src="images/roly_poly_slide.jpeg"
+                            alt="Panda playing on slide"
+                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        />
+                    </div>
+                    <div data-hide class="reveal h-64 rounded-3xl overflow-hidden bg-amber-100 delay-100">
+                        <img
+                            src="images/bamboo_jungle_gym.jpeg"
+                            alt="Panda climbing near slide"
+                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        />
+                    </div>
+                    <div
+                        data-hide
+                        class="reveal h-64 rounded-3xl overflow-hidden bg-pink-100 delay-200 md:col-span-1 md:row-span-2"
+                    >
+                        <img
+                            src="images/hero_panda.jpeg"
+                            alt="Happy panda resting after slide"
+                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        />
+                    </div>
+                    <div data-hide class="reveal h-64 rounded-3xl overflow-hidden bg-sky-100 md:col-span-2">
+                        <img
+                            src="images/roly_poly_slide.jpeg"
+                            alt="Wide view of slide installation"
+                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        />
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Sanctuary Spotlight Section -->
+        <section class="py-24 bg-white relative overflow-hidden">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                <div
+                    class="bg-gradient-to-br from-green-50 to-pink-50 rounded-[3rem] p-10 md:p-16 shadow-xl border border-green-100"
+                >
+                    <h2 data-hide class="reveal font-display text-3xl md:text-5xl font-bold text-gray-900 mb-6">
+                        Ready to Install This Slide?
+                    </h2>
+                    <p data-hide class="reveal text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                        Our team of conservationists and engineers can customize the Roly-Poly Slide to fit your
+                        sanctuary's terrain. Contact us for a free consultation and 3D mockup.
+                    </p>
+                    <div data-hide class="reveal flex flex-col sm:flex-row gap-4 justify-center">
+                        <a
+                            href="#"
+                            class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 text-lg"
+                            >Request a Quote</a
+                        >
+                        <a
+                            href="catalog.html"
+                            class="bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200 px-8 py-4 rounded-full font-bold shadow-xs hover:shadow-md transition-all duration-300"
+                            >View Other Playgrounds</a
+                        >
+                    </div>
+                </div>
+            </div>
+            <div
+                class="absolute top-0 right-0 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-60 translate-x-1/3 -translate-y-1/3"
+            ></div>
+            <div
+                class="absolute bottom-0 left-0 w-80 h-80 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-60 -translate-x-1/3 translate-y-1/3"
+            ></div>
+        </section>
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white py-16" data-pgc="mainFooter">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 border-b border-gray-800 pb-12">
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-2 mb-6">
+                            <svg class="w-8 h-8 text-green-500" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                                <circle
+                                    cx="16"
+                                    cy="16"
+                                    r="14"
+                                    fill="currentColor"
+                                    class="[color:currentColor]"
+                                ></circle>
+                                <circle cx="11.5" cy="12" r="2.25" fill="white"></circle>
+                                <circle cx="20.5" cy="12" r="2.25" fill="white"></circle>
+                                <circle cx="16" cy="17" r="3" fill="white"></circle>
+                                <circle cx="14.7" cy="16.8" r="0.9" fill="black"></circle>
+                                <circle cx="17.3" cy="16.8" r="0.9" fill="black"></circle>
+                                <path
+                                    d="M13.5 21.2C14.4 22.3 15.2 22.8 16 22.8C16.8 22.8 17.6 22.3 18.5 21.2"
+                                    stroke="black"
+                                    stroke-width="1.6"
+                                    stroke-linecap="round"
+                                ></path>
+                                <circle cx="9" cy="8" r="3" fill="currentColor" class="[color:currentColor]"></circle>
+                                <circle cx="23" cy="8" r="3" fill="currentColor" class="[color:currentColor]"></circle>
+                            </svg>
+                            <span class="font-display font-bold text-2xl">PandaPlay</span>
+                        </div>
+                        <p class="text-gray-400 mb-6 max-w-sm">
+                            Designing a better, more playful world for giant pandas, one sanctuary at a time.
+                        </p>
+                        <div class="flex space-x-4">
+                            <a
+                                href="#"
+                                aria-label="PandaPlay on Instagram"
+                                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-500 transition-colors"
+                            >
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <rect
+                                        x="3.5"
+                                        y="3.5"
+                                        width="17"
+                                        height="17"
+                                        rx="5"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                    ></rect>
+                                    <circle cx="12" cy="12" r="3.6" stroke="currentColor" stroke-width="1.8"></circle>
+                                    <circle cx="17.5" cy="6.8" r="1.1" fill="currentColor"></circle>
+                                </svg>
+                            </a>
+                            <a
+                                href="#"
+                                aria-label="PandaPlay on X"
+                                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-500 transition-colors"
+                            >
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path
+                                        d="M4 4L10.9 13.2L4.4 20H6.9L12 14.7L16 20H20L12.8 10.4L18.9 4H16.4L11.7 8.9L8 4H4Z"
+                                        fill="currentColor"
+                                    ></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-display font-bold text-lg mb-4">Quick Links</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li>
+                                <a href="index.html#why-play" class="hover:text-green-500 transition"
+                                    >Why Play Matters</a
+                                >
+                            </li>
+                            <li>
+                                <a href="catalog.html" class="hover:text-green-500 transition">Playground Catalog</a>
+                            </li>
+                            <li>
+                                <a href="index.html#sanctuaries" class="hover:text-green-500 transition">Sanctuaries</a>
+                            </li>
+                            <li>
+                                <a href="#" class="hover:text-green-500 transition">Contact Us</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-display font-bold text-lg mb-4">Stay Updated</h4>
+                        <p class="text-sm text-gray-400 mb-4">
+                            Subscribe for news on panda playtime and global sanctuary projects.
+                        </p>
+                        <form class="flex">
+                            <label class="sr-only" for="footer-email">Your email address</label>
+                            <input
+                                id="footer-email"
+                                type="email"
+                                placeholder="Your email address"
+                                class="bg-gray-800 text-white px-4 py-2 rounded-l-full w-full focus:outline-hidden focus:ring-2 focus:ring-green-500 border-none"
+                            />
+                            <button
+                                type="submit"
+                                class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-r-full font-bold transition-colors"
+                            >
+                                Join
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="text-center text-gray-500 text-sm">
+                    &copy; 2026 PandaPlay. All rights reserved.
+                    <p class="mt-2">
+                        Created with Pinegrow Online.
+                        <a
+                            href="http://pinegrow.online/"
+                            class="text-green-500 hover:text-green-400 underline transition-colors"
+                            >Sign up for your free account.</a
+                        >
+                    </p>
+                </div>
+            </div>
+        </footer>
+        <script type="module">
+            import { animate, inView, stagger } from "https://cdn.jsdelivr.net/npm/motion@12.23.26/+esm";
+
+            // Setup initial state for elements without data-hide that we still want to animate
+
+            // Reveal animations
+            inView(".reveal", (el) => {
+                animate(el, { opacity: [0, 1], y: [30, 0] }, { duration: 0.8, ease: "easeOut" });
+            });
+        </script>
+    </body>
+</html>
