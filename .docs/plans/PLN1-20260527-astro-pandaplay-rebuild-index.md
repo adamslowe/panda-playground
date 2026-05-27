@@ -605,6 +605,15 @@ To execute this plan in a new session:
 - `Affected sections / artifacts:` `src/pages/quote.astro` (new); `src/pages/playgrounds/[slug].astro` (Quote button param); plan body 8080→4321 + `dist/`→`dist/client/` + single-process corrections applied throughout.
 - `User approval:` Commit pending approval.
 
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` Step 9 (README) complete. Rewrote the stock README into a PandaPlay presenter cheat-sheet: a feature→code-location table (the 9 Astro features mapped to files), project structure, commands, and the SSG+SSR run instructions (corrected to port 4321, single-process note, `PORT=` override shown per Astro docs). The plan's review-MD3 "combined astro.config.mjs reference" is satisfied by pointing to the live `astro.config.mjs` (all four integrations composed there) rather than duplicating config into the README.
+- `Reason:` Delivery step 9; the config file is the authoritative reference, so duplicating it into docs would risk drift (concision over restatement).
+- `Affected sections / artifacts:` `README.md`; plan Documentation deliverables (MD3 satisfied by reference, not duplication).
+- `User approval:` Commit pending approval.
+
 ## Closeout record
 
 **Status:**
