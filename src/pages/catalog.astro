@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProductCard from "../components/ProductCard.astro";
+import CatalogFilter from "../components/CatalogFilter.tsx";
 
 // All 6 products, collection-sourced, ordered. Astro renders every card
 // server-side (SSG, SEO-friendly); the filter island (Step 7) only toggles
@@ -34,9 +35,10 @@ const delays = ["", "delay-100", "delay-200"];
     </div>
   </section>
 
-  {/* Catalog grid (filter island mounts here in Step 7) */}
+  {/* Catalog grid with the one hydrated island (the dynamic-island demo). */}
   <section id="catalog" class="py-20 bg-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <CatalogFilter client:visible />
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
           products.map((entry, i) => (

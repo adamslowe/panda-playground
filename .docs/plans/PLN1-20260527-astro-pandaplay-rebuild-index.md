@@ -569,6 +569,15 @@ To execute this plan in a new session:
 
 **Verification note (Motion scroll-reveal + full-page screenshots):** A full-page Playwright screenshot captures the whole page height *without* scroll-triggering the IntersectionObserver, so below-fold `.reveal` elements appear blank (`opacity: 0` from `[data-hide]`) until scrolled into view. This is correct, faithful behavior (the source uses the same `inView('.reveal')` pattern) — **not** a render bug. Verified: scrolling the page sets every reveal to `opacity: 1`. Step 10 reveal verification must scroll before asserting visibility / screenshotting.
 
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` Step 7 (Preact catalog-filter island) complete. `CatalogFilter.tsx` hydrated with `client:visible`; filtering verified in-browser (All=6, Available=2 both `available`, Coming Soon=4 all `coming-soon`, back to All=6 — deterministic by data-status + `hidden` class toggle, AC13). Island JS isolation verified against a production build: the `CatalogFilter` chunk + Preact runtime ship **only** on `/catalog` (via `<astro-island>` from `client:visible`); `/index` and both detail pages reference **0** island/Preact chunks. The shared Motion script is present on all pages (AC8) and is correctly distinct from the island chunk. Tailwind compiled the island's `.tsx` button classes without needing the `@source` fallback.
+- `Reason:` Delivery step 7.
+- `Affected sections / artifacts:` `src/components/CatalogFilter.tsx`, `src/pages/catalog.astro`.
+- `User approval:` Commit pending approval.
+
 ## Closeout record
 
 **Status:**
