@@ -529,6 +529,46 @@ To execute this plan in a new session:
 - `Affected sections / artifacts:` Delivery steps 2–5.
 - `User approval:` Commit pending approval.
 
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` With the `@astrojs/node` adapter, the build splits output into `dist/client/` (prerendered static files + `_astro/` assets) and `dist/server/` (entry.mjs + chunks). Prerendered HTML is at `dist/client/index.html`, `dist/client/catalog/index.html`, etc. — **not** `dist/index.html` as several Agent Verification checks assume.
+- `Reason:` The Node adapter changes the build output shape (the plan acknowledged "adds `dist/server/`" but the AC checks still reference `dist/index.html`, `dist/catalog/index.html`, `dist/_astro/`). Build-output and Playwright path references must use `dist/client/...`.
+- `Affected sections / artifacts:` AC7/AC13/AC14 build-output checks; the optimized-image, island-JS-isolation, and static-HTML-existence checks all need the `dist/client/` prefix. The `/quote` SSR route is correctly absent from `dist/client/` (it's in the server build).
+- `User approval:` Not required (verification-artifact path correction; reality matches approved intent — mixed SSG/SSR output. Will apply the path prefix when running Step 10 Agent Verification).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` **AC13 island-JS-isolation check needs correction.** As written it expects `dist/index.html` and detail pages to contain **0** `<script src="/_astro/…">` references. But the shared **Motion reveal script** (from `BaseLayout`'s `<script>`, AC8) legitimately bundles to a `/_astro/*.js` file referenced on *every* page. Verified: `dist/client/index.html` references `/_astro/BaseLayout.astro_..._lang.*.js` (the Motion script), and an inline module. The correct island-isolation check is: the **CatalogFilter island chunk** appears only on the catalog page, not "zero /_astro scripts on non-catalog pages."
+- `Reason:` The plan's AC13 check conflated "any `/_astro/` script" with "island hydration JS." The Motion script is shared chrome by design (AC8 loads it once from the layout), so it's present everywhere. The real isolation property is that the *Preact island's* JS is unique to catalog.
+- `Affected sections / artifacts:` AC13 Agent Verification (build-output island-isolation line). Corrected check to be applied in Step 10: identify the island chunk on `dist/client/catalog/index.html` and confirm it's absent from `dist/client/index.html` + detail pages — distinguishing it from the shared Motion script which is allowed everywhere.
+- `User approval:` Not required (verification-artifact gap correction per PLANNING-DELIVERY §16; the underlying behavior — only the island hydrates interactively — is unchanged and still verified).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` Step 6 SSG pages complete (`index`, `catalog`, `playgrounds/[slug]`). All three render faithfully vs `htmlsite/` — verified by browser screenshots (home: hero/feature cards/featured grid/spotlight; catalog: hero band + 6-card grid with overlay badges + disabled coming-soon CTAs; detail: eyebrow/feature+bullets/stats/asymmetric gallery/CTA). Build optimizes images to webp; fonts self-hosted (0 googleapis refs); titles verbatim (AC9); "Request a Quote" → `/quote` (AC14). `astro check` clean (30 files).
+- `Reason:` Delivery step 6.
+- `Affected sections / artifacts:` `src/pages/index.astro`, `catalog.astro`, `playgrounds/[slug].astro`; `.gitignore` (Playwright artifacts excluded).
+- `User approval:` Commit pending approval.
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Decision
+- `Summary:` Playwright screenshots (`*-astro.png`, `home-astro-revealed.png`) and `.playwright-mcp/` added to `.gitignore` — temporary verification artifacts, not source. Cleaned up at closeout.
+- `Reason:` These are transient render-verification output (the plan classifies browser verification as temporary). Keeping them out of git matches the plan's temporary-artifact lifecycle.
+- `Affected sections / artifacts:` `.gitignore`.
+- `User approval:` Not required (hygiene; no scope/behavior change).
+
+---
+
+**Verification note (Motion scroll-reveal + full-page screenshots):** A full-page Playwright screenshot captures the whole page height *without* scroll-triggering the IntersectionObserver, so below-fold `.reveal` elements appear blank (`opacity: 0` from `[data-hide]`) until scrolled into view. This is correct, faithful behavior (the source uses the same `inView('.reveal')` pattern) — **not** a render bug. Verified: scrolling the page sets every reveal to `opacity: 1`. Step 10 reveal verification must scroll before asserting visibility / screenshotting.
+
 ## Closeout record
 
 **Status:**

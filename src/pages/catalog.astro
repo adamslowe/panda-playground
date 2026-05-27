@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProductCard from "../components/ProductCard.astro";
+
+// All 6 products, collection-sourced, ordered. Astro renders every card
+// server-side (SSG, SEO-friendly); the filter island (Step 7) only toggles
+// their visibility via the data-status hook on each card wrapper.
+const products = (await getCollection("playgrounds")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+// Stagger delays cycle every 3 cards to match the source grid rhythm.
+const delays = ["", "delay-100", "delay-200"];
+---
+
+<BaseLayout
+  title="PandaPlay - Playground Catalog"
+  description="Browse our complete collection of enrichment playgrounds designed for giant pandas. Each installation is crafted with wildlife experts to ensure optimal play and enrichment."
+>
+  {/* Hero band */}
+  <section class="pt-16 pb-20 bg-gradient-to-b from-green-50 to-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1
+        data-hide
+        class="reveal font-display text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight mb-6"
+      >
+        Playground Catalog
+      </h1>
+      <p data-hide class="reveal text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        Browse our complete collection of enrichment playgrounds designed for giant pandas. Each
+        installation is crafted with wildlife experts to ensure optimal play and enrichment.
+      </p>
+    </div>
+  </section>
+
+  {/* Catalog grid (filter island mounts here in Step 7) */}
+  <section id="catalog" class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {
+          products.map((entry, i) => (
+            <ProductCard entry={entry} badgePlacement="overlay" delay={delays[i % 3]} />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
