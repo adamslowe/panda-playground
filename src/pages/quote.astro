@@ -1,0 +1,77 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// The one on-demand (SSR) route. `prerender = false` opts this page out of the
+// default static build, so the Node adapter renders it per request — the
+// timestamp and "browsing now" count change on every reload, in contrast to
+// the static .html files of every other route.
+export const prerender = false;
+
+const now = new Date();
+const renderedAt = now.toLocaleString("en-GB", {
+  dateStyle: "medium",
+  timeStyle: "medium",
+  timeZone: "UTC",
+});
+const browsingNow = 3 + Math.floor(Math.random() * 18);
+
+// Echo back the playground the visitor came from, if the detail page passed it.
+const playground = Astro.url.searchParams.get("playground");
+---
+
+<BaseLayout
+  title="PandaPlay - Request a Quote"
+  description="Request a custom quote for your sanctuary's enrichment playground. Our conservationists and engineers tailor each installation to your terrain."
+>
+  {/* Hero band */}
+  <section class="pt-16 pb-12 bg-gradient-to-b from-green-50 to-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="text-green-600 font-bold tracking-wider uppercase text-sm mb-2 block">
+        Live Availability
+      </span>
+      <h1
+        data-hide
+        class="reveal font-display text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight mb-6"
+      >
+        Request a Quote
+      </h1>
+      <p data-hide class="reveal text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        Tell us about your sanctuary and our team will tailor an enrichment playground to your
+        terrain. {playground && <span>You're enquiring about the <strong>{playground}</strong>.</span>}
+      </p>
+    </div>
+  </section>
+
+  {/* Live, server-rendered status — changes on every reload */}
+  <section class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-br from-green-50 to-pink-50 rounded-[3rem] p-10 md:p-16 shadow-xl border border-green-100 text-center">
+        <div class="inline-flex items-center gap-2 mb-6">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          </span>
+          <span class="text-green-700 font-bold uppercase tracking-wider text-sm">Rendered on the server</span>
+        </div>
+        <p class="text-2xl md:text-3xl font-display font-bold text-gray-900 mb-4">
+          {browsingNow} sanctuaries are browsing playgrounds right now
+        </p>
+        <p class="text-gray-600 mb-2">
+          This page is computed per request — reload to see the numbers change.
+        </p>
+        <p class="text-sm text-gray-500 font-medium">
+          Rendered on the server at {renderedAt} UTC
+        </p>
+      </div>
+
+      <div class="text-center mt-10">
+        <a
+          href="/catalog"
+          class="inline-block bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200 px-8 py-4 rounded-full font-bold shadow-xs hover:shadow-md transition-all duration-300"
+        >
+          Back to the Catalog
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

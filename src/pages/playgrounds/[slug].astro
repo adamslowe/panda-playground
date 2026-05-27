@@ -130,7 +130,9 @@ const gallery = data.gallery ?? [];
           {data.ctaBody}
         </p>
         <div data-hide class="reveal flex flex-col sm:flex-row gap-4 justify-center">
-          <Button href="/quote" variant="primary" size="lg">Request a Quote</Button>
+          <Button href={`/quote?playground=${encodeURIComponent(data.title)}`} variant="primary" size="lg">
+            Request a Quote
+          </Button>
           <Button href="/catalog" variant="secondary" size="lg">View Other Playgrounds</Button>
         </div>
       </div>

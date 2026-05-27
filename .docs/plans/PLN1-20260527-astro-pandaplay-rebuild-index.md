@@ -137,7 +137,7 @@ Decisions deferred to the **Approach gate** (HOW, not WHAT): flash-prevention me
 
 > Resolved deferred decisions (from Intent): (1) flash-prevention = `[data-hide]{opacity:0}` rule in `global.css`; (2) featured section = `getCollection('playgrounds')` filtered to `status: 'available'`, sorted by `order`; (3) layouts = **two** (`BaseLayout` + `ProductLayout`, nested); (4) SEO = hand-rolled `Seo.astro` emitting title + description + canonical + Open Graph + Twitter Card, wired into `BaseLayout`.
 >
-> **Amendment v2 (demo features):** (5) island = Preact catalog filter, `client:visible`; (6) SSG+SSR = keep default `output: 'static'`, add `@astrojs/node` standalone adapter, one `/quote` route with `export const prerender = false`. Mechanics verified against Astro 6 docs (`output: 'static'` is correct — `'hybrid'` was removed; per-route `prerender = false`; `node({ mode: 'standalone' })` → `node ./dist/server/entry.mjs`, default localhost:8080).
+> **Amendment v2 (demo features):** (5) island = Preact catalog filter, `client:visible`; (6) SSG+SSR = keep default `output: 'static'`, add `@astrojs/node` standalone adapter, one `/quote` route with `export const prerender = false`. Mechanics verified against Astro 6 docs (`output: 'static'` is correct — `'hybrid'` was removed; per-route `prerender = false`; `node({ mode: 'standalone' })` → `node ./dist/server/entry.mjs`, default localhost:4321 — *amended 2026-05-27: the plan originally said 8080; the adapter's real default is 4321, port set via the `PORT` env var, see Execution notes*).
 
 ### Approach (chosen shape of the solution)
 
@@ -224,7 +224,7 @@ Validated by `astro build`, dev server boot, and browser screenshots against `ht
 
 ### Documentation and governance deliverables
 
-**README.md** rewritten to describe PandaPlay: what the demo shows, project structure (layouts/components/collection/assets), and `pnpm dev`/`build`/`preview`. **Must include the SSR demo run instructions** — after `pnpm build`, start the Node server with `node ./dist/server/entry.mjs` (localhost:8080) to serve the `/quote` SSR route, and the note that the static routes are real files in `dist/` while `/quote` is computed per request (the presenter beat). Also note that in `astro dev` the `/quote` route is served by Vite, not the Node adapter (resolves review R3/MD1). Doubles as the presenter cheat-sheet. No decision log/changelog/requirements catalog in this repo; none required.
+**README.md** rewritten to describe PandaPlay: what the demo shows, project structure (layouts/components/collection/assets), and `pnpm dev`/`build`/`preview`. **Must include the SSR demo run instructions** — after `pnpm build`, **stop `pnpm dev` if running** (both default to 4321), then start the Node server with `node ./dist/server/entry.mjs` (localhost:4321) to serve the `/quote` SSR route, and the note that the static routes are real files in `dist/client/` while `/quote` is computed per request (the presenter beat). Also note that in `astro dev` the `/quote` route is served by Vite, not the Node adapter (resolves review R3/MD1). Doubles as the presenter cheat-sheet. No decision log/changelog/requirements catalog in this repo; none required.
 
 A short combined `astro.config.mjs` reference (Tailwind Vite plugin + top-level `fonts:` + Preact + Node adapter, composed in one config) is captured here so the four integrations are wired together, not piecemeal (resolves review MD3).
 
@@ -243,7 +243,7 @@ Written per `.docs/standards/VERIFICATION.md` (Code & UI discipline): **Agent Ve
 
 **Verification-support artifacts:**
 - *Persistent:* `htmlsite/` is the existing visual baseline for the Manual fidelity comparison (already in the repo; not created or removed by this plan).
-- *Temporary (runtime):* the AC14 SSR checks require the **built Node server** running. Start it with `node ./dist/server/entry.mjs` (port 8080) after `pnpm build`; **stop the process** (Ctrl-C / kill the PID) once the SSR Playwright check and Manual Test 7 are done. `pnpm preview` (for the SSG Playwright checks) is likewise started and stopped around those checks. No files are created; teardown is stopping the processes.
+- *Temporary (runtime):* the AC14 SSR checks require the **built Node server** running. Start it with `node ./dist/server/entry.mjs` (port 4321) after `pnpm build`; **stop the process** (Ctrl-C / kill the PID) once the SSR Playwright check and Manual Test 7 are done. `pnpm preview` (for the SSG Playwright checks) is likewise started and stopped around those checks. **Run one Astro process at a time** — `pnpm dev`, `pnpm preview`, and the Node server all default to 4321; stop one before starting the next. No files are created; teardown is stopping the processes.
 - No fixtures, showcase pages, or sample content needed.
 
 **Pre-execution baseline (per PLANNING-DELIVERY §17):** this repo has **no `lint`/`test`/`validate` npm script and no test suite**. The baseline check is `pnpm exec astro check` + `pnpm build` on the current starter (expected clean). Recorded here so post-execution verification can distinguish new issues from pre-existing ones; no automated test pipeline is being added (out of scope — demo site).
@@ -252,7 +252,7 @@ Written per `.docs/standards/VERIFICATION.md` (Code & UI discipline): **Agent Ve
 
 The implementing agent must pass all of these before handoff. Leave checkboxes unchecked until run.
 
-**Prerequisites for the Playwright items:** the source/file/build-output checks need only the repo + a `pnpm build`. The Playwright SSG checks run against `pnpm preview`; the Playwright SSR check runs against `node ./dist/server/entry.mjs` (port 8080). Start each server before its checks and stop it after (see Verification-support artifacts above).
+**Prerequisites for the Playwright items:** the source/file/build-output checks need only the repo + a `pnpm build`. The Playwright SSG checks run against `pnpm preview`; the Playwright SSR check runs against `node ./dist/server/entry.mjs` (port 4321). Start each server before its checks and stop it after — one Astro process at a time, since they share the 4321 default (see Verification-support artifacts above).
 
 #### Standard gates
 
@@ -304,7 +304,7 @@ Run the SSG-page checks against `pnpm preview` (the built static output). Run th
 - [ ] Playwright title check (`pnpm preview`): `/` → "PandaPlay - Build a Paradise for Pandas"; `/catalog` → "PandaPlay - Playground Catalog". [AC9]
 - [ ] Playwright title check (`pnpm preview`): `/playgrounds/bamboo-jungle-gym` → "PandaPlay - The Bamboo Jungle Gym"; `/playgrounds/roly-poly-slide` → "PandaPlay - The Roly-Poly Slide" (titles from collection data). [AC9]
 - [ ] Playwright (coming-soon CTA, `pnpm preview` `/catalog`): clicking a coming-soon card's "View Details" performs no navigation (URL unchanged; control is disabled/non-link). [AC5]
-- [ ] Playwright (SSR, against the **built Node server** at `http://localhost:8080`): two GETs of `/quote` a moment apart return responses whose dynamic field (timestamp / count) differs between the two requests. [AC14]
+- [ ] Playwright (SSR, against the **built Node server** at `http://localhost:4321`): two GETs of `/quote` a moment apart return responses whose dynamic field (timestamp / count) differs between the two requests. [AC14]
 
 ### Manual Verification
 
@@ -313,7 +313,7 @@ Human-judgment smoke tests the user runs after handoff. Covers what automation c
 #### Prerequisites
 
 - Dev (SSG pages + island): `pnpm dev` → routes below on the dev server.
-- SSR demo: `pnpm build` then `node ./dist/server/entry.mjs` → `/quote` at `http://localhost:8080/quote`.
+- SSR demo: `pnpm build`, stop any dev/preview server, then `node ./dist/server/entry.mjs` → `/quote` at `http://localhost:4321/quote`.
 - Visual baseline: open the corresponding `htmlsite/*.html` files side-by-side (the existing reference).
 
 #### Acceptance-criteria mapping
@@ -377,10 +377,10 @@ Human-judgment smoke tests the user runs after handoff. Covers what automation c
 
 ##### Test 7: SSR vs SSG contrast (the demo beat)
 
-**Page:** `/quote` on the built Node server (`http://localhost:8080/quote`)
+**Page:** `/quote` on the built Node server (`http://localhost:4321/quote`)
 
 1. Load `/quote`, note the per-request data (timestamp / "N browsing now"). Reload a few times.
-2. Inspect `dist/`: confirm `/`, `/catalog`, `/playgrounds/*` are `.html` files on disk; `/quote` is not.
+2. Inspect `dist/client/`: confirm `/`, `/catalog`, `/playgrounds/*` are `.html` files on disk; `/quote` is not (it lives in the `dist/server/` build).
 3. Reach `/quote` via a detail page's "Request a Quote" button.
 
 **Expected:**
@@ -576,6 +576,33 @@ To execute this plan in a new session:
 - `Summary:` Step 7 (Preact catalog-filter island) complete. `CatalogFilter.tsx` hydrated with `client:visible`; filtering verified in-browser (All=6, Available=2 both `available`, Coming Soon=4 all `coming-soon`, back to All=6 — deterministic by data-status + `hidden` class toggle, AC13). Island JS isolation verified against a production build: the `CatalogFilter` chunk + Preact runtime ship **only** on `/catalog` (via `<astro-island>` from `client:visible`); `/index` and both detail pages reference **0** island/Preact chunks. The shared Motion script is present on all pages (AC8) and is correctly distinct from the island chunk. Tailwind compiled the island's `.tsx` button classes without needing the `@source` fallback.
 - `Reason:` Delivery step 7.
 - `Affected sections / artifacts:` `src/components/CatalogFilter.tsx`, `src/pages/catalog.astro`.
+- `User approval:` Commit pending approval.
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` **The `@astrojs/node` standalone server runs on the default port `4321`, served with `node ./dist/server/entry.mjs` — the plan's repeated "localhost:8080" is wrong.** Verified empirically (the server logs `Server listening on http://localhost:4321`) and against canonical Astro docs (`guides/integrations-guide/node/`): the standalone server reads `HOST`/`PORT` env vars at runtime (docs example: `HOST=0.0.0.0 PORT=4321 node ./dist/server/entry.mjs`); **there is no `server`/port option in the adapter config** (only `mode`, `staticHeaders`, `experimentalDisableStreaming`, `bodySizeLimit`). The idiomatic way to set the port is the runtime env var, not committed config. 8080 was not an Astro default or convention — the plan invented it.
+- `Reason:` Build/demo/verification of the SSR route must target the real port. The idiomatic, docs-backed command is the bare `node ./dist/server/entry.mjs` (→ 4321); a `PORT=` prefix is only needed to override.
+- `Affected sections / artifacts:` AC14 (Agent Verification SSR check — change `http://localhost:8080` → `http://localhost:4321`); Manual Test 7 prerequisites + page URL (`http://localhost:8080/quote` → `http://localhost:4321/quote`); the "Verification-support artifacts" temporary-artifact note ("port 8080" → "port 4321"); the README SSR run instructions (Documentation deliverables). No code change to `quote.astro` (it has no port config). To be applied to those plan sections + the README in this slice.
+- `User approval:` **Received** (Adam Lowe, 2026-05-27 — confirmed default 4321 / docs-idiomatic / no PORT override).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Decision
+- `Summary:` **The SSR demo and verification run a single Astro process at a time — `pnpm dev` (4321) and the built Node server (4321) are never run concurrently.** In dev, the `/quote` route is served by Vite; to exercise the real adapter-rendered SSR behavior, stop `pnpm dev`, then run `node ./dist/server/entry.mjs`. The plan's Acceptance checks already start/stop `pnpm preview` and the Node server *around* their respective checks (sequential), so no concurrency is required.
+- `Reason:` The EADDRINUSE collision on 4321 encountered during Step 8 testing was caused by a `pnpm dev` server I started earlier for screenshots and **left running** — an operator cleanup miss, not a design constraint. There is no functional need for two Astro processes; treating the collision as a reason to override the port was backwards. Single-process-at-a-time keeps the default 4321 collision-free and the run command idiomatic (bare `node ./dist/server/entry.mjs`).
+- `Affected sections / artifacts:` README SSR run instructions (clarify: stop the dev server before starting the prod server); Manual Test 7 wording; operator process hygiene during Step 10 verification. No effect if both side-by-side were ever needed (they aren't for this demo).
+- `User approval:` **Received** (Adam Lowe, 2026-05-27 — "That matches").
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` Step 8 (`/quote` SSR route) complete. `quote.astro` has `export const prerender = false`; renders per-request data (UTC timestamp + random "N sanctuaries browsing" count) and echoes the `?playground=` param. Detail-page "Request a Quote" buttons now pass `?playground=<title>`. Verified against the built Node server (default 4321): two requests 2.5s apart differ in both timestamp (23:12:20→23:12:22) and count (7→3); param echo renders ("enquiring about The Roly-Poly Slide"); `/quote` is **not** in `dist/client/` (SSR, lives in `dist/server/`) while `/`, `/catalog`, `/playgrounds/*` are static `.html` in `dist/client/`; all routes return 200 from the Node server; production server console is clean (no dev-toolbar errors). Browser screenshot confirms on-brand fidelity.
+- `Reason:` Delivery step 8.
+- `Affected sections / artifacts:` `src/pages/quote.astro` (new); `src/pages/playgrounds/[slug].astro` (Quote button param); plan body 8080→4321 + `dist/`→`dist/client/` + single-process corrections applied throughout.
 - `User approval:` Commit pending approval.
 
 ## Closeout record
