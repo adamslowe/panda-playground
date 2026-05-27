@@ -1,0 +1,24 @@
+---
+// Status/label pill. `color` carries the full Tailwind bg+text classes
+// (e.g. "bg-green-100 text-green-800"). `placement` reproduces the source's
+// two uses: inline in the home card body, or overlaid on the catalog card image.
+interface Props {
+  text: string;
+  color: string;
+  placement?: "inline" | "overlay";
+}
+const { text, color, placement = "inline" } = Astro.props;
+
+const placementClasses =
+  placement === "overlay" ? "absolute top-4 left-4" : "";
+
+const classes = [
+  placementClasses,
+  color,
+  "text-sm font-bold px-3 py-1 rounded-full",
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<span class={classes}>{text}</span>

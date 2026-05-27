@@ -1,0 +1,40 @@
+---
+import LogoIconNav from "./icons/LogoIconNav.astro";
+
+const links = [
+  { href: "/#why-play", label: "Why Play Matters" },
+  { href: "/catalog", label: "Catalog" },
+  { href: "/#sanctuaries", label: "Sanctuaries" },
+];
+---
+
+<nav class="sticky top-0 z-50 backdrop-blur-md bg-white/90 shadow-xs">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <a
+        href="/"
+        class="shrink-0 flex items-center gap-2 transition-transform hover:scale-105 duration-300"
+      >
+        <LogoIconNav class="w-8 h-8 text-green-500" />
+        <span class="font-display font-bold text-2xl text-gray-900">PandaPlay</span>
+      </a>
+      <div class="hidden md:flex space-x-8 items-center">
+        {
+          links.map((link) => (
+            <a
+              href={link.href}
+              class="text-gray-600 hover:text-green-600 font-medium transition-colors"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+        <a
+          href="/catalog"
+          class="bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-full font-bold shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+          >Browse Catalog</a
+        >
+      </div>
+    </div>
+  </div>
+</nav>

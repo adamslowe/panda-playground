@@ -1,0 +1,16 @@
+---
+// Detail-page stat tile. `color` is the accent text class for the value;
+// `hoverColor` is the per-position hover background tint from the source.
+interface Props {
+  value: string;
+  label: string;
+  color: string;
+  hoverColor: string;
+}
+const { value, label, color, hoverColor } = Astro.props;
+---
+
+<div data-hide class={`reveal bg-gray-50 p-8 rounded-3xl text-center transition-colors ${hoverColor}`}>
+  <div class={`text-4xl font-display font-bold mb-2 ${color}`}>{value}</div>
+  <div class="text-gray-600 font-medium">{label}</div>
+</div>

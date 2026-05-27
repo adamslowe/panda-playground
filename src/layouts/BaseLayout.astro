@@ -1,0 +1,46 @@
+---
+import { Font } from "astro:assets";
+import "../styles/global.css";
+import Seo from "../components/Seo.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+const { title, description, ogImage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Seo title={title} description={description} ogImage={ogImage} />
+    {/* Astro Fonts API — self-hosted. Body font preloaded; heading font lazy. */}
+    <Font cssVariable="--font-nunito-sans" preload />
+    <Font cssVariable="--font-quicksand" />
+  </head>
+  <body class="font-sans text-gray-800 bg-white antialiased">
+    <Nav />
+    <slot />
+    <Footer />
+
+    {/*
+      Single shared client script for scroll-reveal. `motion` is an npm dep
+      (not a CDN import); only `animate` + `inView` are used (the source's
+      unused `stagger` import is dropped). Elements start hidden via the
+      [data-hide] rule in global.css, so they don't flash before animating in.
+    */}
+    <script>
+      import { animate, inView } from "motion";
+
+      inView(".reveal", (el) => {
+        animate(el, { opacity: [0, 1], y: [30, 0] }, { duration: 0.8, ease: "easeOut" });
+      });
+    </script>
+  </body>
+</html>

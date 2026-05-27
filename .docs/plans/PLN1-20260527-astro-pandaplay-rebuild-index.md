@@ -173,7 +173,7 @@ Decisions deferred to the **Approach gate** (HOW, not WHAT): flash-prevention me
 **4. Content collection** (`src/content.config.ts`, `src/content/playgrounds/`)
 - `playgrounds` via `glob({ pattern: '**/*.md', base: './src/content/playgrounds' })`.
 - Schema `({ image }) => z.object({ … })`:
-  - `title: z.string()` · `status: z.enum(['available','coming-soon'])` · `order: z.number()` · `summary: z.string()` (card copy)
+  - `title: z.string()` · `status: z.enum(['available','coming-soon'])` · `order: z.number()` · `summary: z.string()` (home featured-card copy) · `cardSummary: z.string().optional()` (catalog-grid copy; ProductCard falls back to `summary` — *amended 2026-05-27, see Execution notes*)
   - `badge: z.object({ text: z.string(), color: z.string() }).optional()`
   - available-only: `image: image().optional()`, `seoDescription: z.string().optional()`, `eyebrow: z.object({ text: z.string(), color: z.string() }).optional()`, `heroIntro: z.string().optional()`, `feature: z.object({ heading: z.string(), body: z.string(), points: z.array(z.string()) }).optional()`, `stats: z.array(z.object({ value: z.string(), label: z.string(), color: z.string() })).optional()`, `ctaHeading: z.string().optional()`, `ctaBody: z.string().optional()` (full per-product CTA copy: "Ready to Install This Gym?" etc.)
   - coming-soon: `placeholder: z.object({ color: z.string(), icon: z.enum(['clock','cloud','face','cube']) }).optional()`
@@ -187,7 +187,7 @@ Decisions deferred to the **Approach gate** (HOW, not WHAT): flash-prevention me
 - `playgrounds/[slug].astro` — `getStaticPaths()` over **available** entries; uses `ProductLayout`. Renders the feature block (`StatCard`s + `CheckIcon` bullet list), the "See It In Action" gallery (asymmetric grid: one cell `md:col-span-1 md:row-span-2`, one `md:col-span-2`) mapped from the entry's `gallery` array, and the CTA from `ctaHeading`/`ctaBody`. All photos via `<Image />`. **SSG** (prerendered, default).
 - **`quote.astro` — the one SSR route (SSG+SSR demo, AC14).** `export const prerender = false`. Uses `BaseLayout`. Renders per-request dynamic content that visibly changes on reload — e.g. a server timestamp (`new Date()`), a pseudo-random "N sanctuaries browsing right now", and an optional `?playground=` query param echoed back — with a visible "Rendered on the server at {time}" line so the contrast with the static pages is obvious in the demo. Linked from the detail-page "Request a Quote" buttons so it's reachable in the flow.
 
-**6. Layout props** — `BaseLayout` props: `title`, `description`, `ogImage?`. `ProductLayout` props: `title`, `description`, `ogImage?`, `eyebrow`, `heroIntro` — it forwards the SEO trio to `BaseLayout` and renders the eyebrow/title/intro hero scaffold itself (resolves review R4).
+**6. Layout props** — `BaseLayout` props: `title`, `description`, `ogImage?`. `ProductLayout` props: `title`, `description`, `ogImage?`, `productTitle`, `eyebrow`, `heroIntro` — it forwards the SEO trio to `BaseLayout` and renders the eyebrow/title/intro hero scaffold itself (resolves review R4). *(Amended 2026-05-27: `productTitle` (on-page `<h1>`) is split from the SEO `title` (full `<title>`) since the source's heading and page title differ — see Execution notes.)*
 
 **7. Images** — `htmlsite/images/*.jpeg` → `src/assets/playgrounds/`. The 2 available entries reference their photo + `gallery` array via the schema `image()` helper; `hero_panda.jpeg` is imported directly where used outside collections (home hero, Sanctuary Spotlight). All photo use sites render with `<Image />` and explicit `width`/`height` to preserve layout (avoids CLS).
 
@@ -456,6 +456,78 @@ To execute this plan in a new session:
 - `Reason:` pnpm 9 only records overrides in the lockfile when they change a resolution. The plan's AC verifies via `pnpm list vite` / `pnpm why vite` showing a single major-7 Vite — which holds. No action needed; recording so the closeout verifier doesn't flag the absent lockfile block as a miss.
 - `Affected sections / artifacts:` `package.json` (`pnpm.overrides`); `pnpm-lock.yaml` (no override block, as expected). The Vite-7 AC check (`pnpm why vite` → single major 7) passes.
 - `User approval:` Not required (low-risk record-only — constraint intent satisfied; the pin is present and functional).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` Step 1 (Setup) committed as `0991c76`.
+- `Reason:` Slice boundary per Delivery order; reviewable setup unit before any UI code.
+- `Affected sections / artifacts:` Delivery step 1.
+- `User approval:` **Received** (commit approved by Adam Lowe).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` The chrome-related icon components (`LogoIconNav`, `LogoIconFooter`, `InstagramIcon`, `XIcon`) are authored in Step 2 (Layouts + chrome) rather than Step 3 (Primitives), because `Nav.astro` and `Footer.astro` compose them and must not re-inline raw `<svg>` (AC3b). Remaining icons (`CheckIcon`, `ArrowIcon`, placeholder icons) stay in Step 3 as planned.
+- `Reason:` Build-order dependency: Step 2 chrome needs its icons present to be idiomatic and pass AC3b. Same files, same components — only the slice they land in moves earlier.
+- `Affected sections / artifacts:` Delivery steps 2–3 sequencing; `src/components/icons/*`. No change to deliverables, scope, or verification.
+- `User approval:` Not required (low-risk record-only — sequencing adjustment).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Decision
+- `Summary:` Added `site: 'https://pandaplay.example'` to `astro.config.mjs` (placeholder canonical origin). `Seo.astro` uses `Astro.site` to build absolute canonical + OG/Twitter image URLs (falls back to `Astro.url` if unset).
+- `Reason:` Stable absolute canonical/OG URLs need a configured `site`; without it canonical would be per-request origin. The plan deferred SEO component shape to an Approach-gate detail and didn't specify `site`. Placeholder value is demo-appropriate; swap at deploy.
+- `Affected sections / artifacts:` `astro.config.mjs` (`site`); `src/components/Seo.astro`.
+- `User approval:` Not required (minor implementation detail within deferred SEO-shape latitude; fallback handles unset case).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` `ProductLayout.astro` takes a `productTitle` prop (the on-page `<h1>` text, e.g. "The Bamboo Jungle Gym") **distinct from** the SEO `title` prop (the full `<title>`, e.g. "PandaPlay - The Bamboo Jungle Gym"). The plan's ProductLayout prop list (`title, description, ogImage?, eyebrow, heroIntro`) conflated page title and displayed heading.
+- `Reason:` The source's `<title>` and on-page heading differ; faithful rendering (AC2/AC9) requires both. Splitting the prop is the minimal correct fix.
+- `Affected sections / artifacts:` `src/layouts/ProductLayout.astro`; plan Approach §6 layout-props line (ProductLayout props).
+- `User approval:` Not required (minor implementation detail; serves AC9 fidelity, no scope/behavior change).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` Editor surfaced a TS diagnostic on `astro.config.mjs` (`vite.plugins` `Plugin` type mismatch) from two pnpm peer-context copies of the *same* `vite@7.3.3`. The authoritative gate `pnpm exec astro check` reports **0 errors** — the diagnostic is an editor-only false positive, not a real type error. Not suppressed (suppression would mask real config errors).
+- `Reason:` pnpm resolves `vite@7.3.3` under two peer hashes; the editor's TS server picks a stricter multi-context view than `astro check`. Benign; build + check pass.
+- `Affected sections / artifacts:` none (no code change; recorded so it isn't re-investigated).
+- `User approval:` Not required (record-only, no defect).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Decision
+- `Summary:` Added an optional `cardSummary` field to the `playgrounds` schema. The source uses **different card copy** for the 2 available products on home (longer) vs catalog (shorter). `summary` holds the home/longer text; `cardSummary` holds the catalog/shorter text; `ProductCard` falls back to `summary` when `cardSummary` is absent (coming-soon products appear only on catalog and carry one copy).
+- `Reason:` A single `summary` field could not reproduce both source surfaces verbatim (AC2 fidelity). One optional field keeps both faithful.
+- `Affected sections / artifacts:` `src/content.config.ts` (schema); plan Approach §4 schema field list; `ProductCard` (consumes a per-surface summary prop).
+- `User approval:` **Received** (Adam Lowe, 2026-05-27 — "Add cardSummary field").
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` Gallery images keep the planned `gallery: z.array(image())` schema (image only, no per-image alt/tint). The detail template supplies each cell's alt text, background tint, and span classes **positionally** (the tints and spans were always template concerns; alt joins them). Added three home-section icon components (`HeartIcon`, `BoltIcon`, `SmileIcon`) not enumerated in the plan's icon list, so the home "Why Play Matters" cards compose icons instead of inlining raw `<svg>` (AC3b).
+- `Reason:` Keeps the prototype-verified schema shape; the source gallery's alt texts are positional and few, so template-supplied alts are simpler than expanding the schema. The three feature icons are required for AC3b (no inlined SVG in pages) and were implied by "repeated SVG icons" in the plan's icon rationale.
+- `Affected sections / artifacts:` `src/components/ProductCard.astro`, `FeatureCard.astro`, `StatCard.astro`, `src/components/icons/{Heart,Bolt,Smile}Icon.astro`; gallery alt handled in `[slug].astro` (Step 6).
+- `User approval:` Not required (minor implementation detail; serves AC3b/AC7, no scope change).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` Steps 2–5 complete (layouts + chrome, primitives, collection, cards). `astro check` clean (28 files, 0 errors); `astro sync` validates the collection + image paths. Proposing one commit for the foundation slice (all components/collection, no rendered page yet).
+- `Reason:` Steps 2–5 are foundation with no user-facing render; one coherent reviewable commit beats four noisy micro-commits (PLANNING-DELIVERY §18 commit grouping).
+- `Affected sections / artifacts:` Delivery steps 2–5.
+- `User approval:` Commit pending approval.
 
 ## Closeout record
 

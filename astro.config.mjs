@@ -7,6 +7,10 @@ import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
+  // Placeholder canonical origin for SEO (canonical + OG URLs). Demo value;
+  // swap for the real domain at deploy time.
+  site: 'https://pandaplay.example',
+
   vite: {
     plugins: [tailwindcss()],
   },

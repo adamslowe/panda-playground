@@ -1,0 +1,28 @@
+---
+// "Why Play Matters" feature card. The icon comes through the default <slot>
+// (the page composes it with an icon component). Styling props reproduce the
+// per-card color, rotation, hover tint, and stagger delay from the source.
+interface Props {
+  title: string;
+  body: string;
+  iconBg: string;
+  iconColor: string;
+  rotation: string;
+  hoverBg: string;
+  delay?: string;
+}
+const { title, body, iconBg, iconColor, rotation, hoverBg, delay = "" } = Astro.props;
+---
+
+<div
+  data-hide
+  class={`reveal feature-card flex flex-col items-center text-center p-8 rounded-3xl bg-gray-50 transition-colors duration-300 ${hoverBg} ${delay}`}
+>
+  <div
+    class={`w-20 h-20 rounded-2xl flex items-center justify-center mb-6 transform ${iconBg} ${iconColor} ${rotation}`}
+  >
+    <slot />
+  </div>
+  <h3 class="font-display text-2xl font-bold mb-4 text-gray-900">{title}</h3>
+  <p class="text-gray-600">{body}</p>
+</div>

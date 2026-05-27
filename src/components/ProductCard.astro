@@ -1,0 +1,98 @@
+---
+import { Image } from "astro:assets";
+import Badge from "./Badge.astro";
+import Button from "./Button.astro";
+import ClockIcon from "./icons/ClockIcon.astro";
+import CloudIcon from "./icons/CloudIcon.astro";
+import FaceIcon from "./icons/FaceIcon.astro";
+import CubeIcon from "./icons/CubeIcon.astro";
+import type { CollectionEntry } from "astro:content";
+
+// Card for one playground. Branches on status: available -> optimized photo +
+// inline/overlay badge + link to the detail page; coming-soon -> colored
+// placeholder panel + icon + overlay badge + disabled (non-navigating) CTA.
+//
+// `badgePlacement` is the source's surface tell: inline = home Featured cards
+// (badge in the body next to the title, ghost button, larger card); overlay =
+// catalog grid (badge over the image, green button, compact card). The root
+// wrapper emits data-status so the catalog filter island can show/hide it.
+interface Props {
+  entry: CollectionEntry<"playgrounds">;
+  badgePlacement: "inline" | "overlay";
+  delay?: string;
+}
+const { entry, badgePlacement, delay = "" } = Astro.props;
+const { data, id } = entry;
+const isHome = badgePlacement === "inline";
+
+const iconMap = { clock: ClockIcon, cloud: CloudIcon, face: FaceIcon, cube: CubeIcon };
+const PlaceholderIcon = data.placeholder ? iconMap[data.placeholder.icon] : null;
+
+const summary = data.cardSummary ?? data.summary;
+
+const imageHeight = isHome ? "h-64 sm:h-80" : "h-64 sm:h-72";
+const cardBorder = isHome ? "" : "border border-gray-100";
+const bodyPadding = isHome ? "p-8" : "p-6";
+const titleMargin = isHome ? "mb-4" : "mb-3";
+const summaryClass = isHome ? "text-gray-600 mb-6" : "text-gray-600 mb-6 text-sm leading-relaxed";
+---
+
+<div
+  data-status={data.status}
+  data-hide
+  class={`reveal bg-white rounded-[2.5rem] overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group ${cardBorder} ${delay}`}
+>
+  {
+    data.status === "available" && data.image ? (
+      <div class={`${imageHeight} overflow-hidden relative`}>
+        <Image
+          src={data.image}
+          alt={data.title}
+          width={800}
+          height={600}
+          class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+        />
+        {data.badge && badgePlacement === "overlay" && (
+          <Badge text={data.badge.text} color={data.badge.color} placement="overlay" />
+        )}
+      </div>
+    ) : (
+      <div
+        class={`${imageHeight} overflow-hidden relative flex items-center justify-center ${data.placeholder?.color ?? "bg-gray-100"}`}
+      >
+        {PlaceholderIcon && <PlaceholderIcon class="w-20 h-20" />}
+        {data.badge && (
+          <Badge text={data.badge.text} color={data.badge.color} placement="overlay" />
+        )}
+      </div>
+    )
+  }
+  <div class={bodyPadding}>
+    {
+      isHome && data.badge ? (
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="font-display text-2xl font-bold text-gray-900">{data.title}</h3>
+          <Badge text={data.badge.text} color={data.badge.color} placement="inline" />
+        </div>
+      ) : (
+        <h3 class={`font-display text-2xl font-bold text-gray-900 ${titleMargin}`}>{data.title}</h3>
+      )
+    }
+    <p class={summaryClass}>{summary}</p>
+    {
+      data.status === "available" ? (
+        <Button
+          href={`/playgrounds/${id}`}
+          variant={isHome ? "ghost" : "primary"}
+          class="block w-full py-3"
+        >
+          View Details
+        </Button>
+      ) : (
+        <Button disabled class="block w-full py-3">
+          View Details
+        </Button>
+      )
+    }
+  </div>
+</div>

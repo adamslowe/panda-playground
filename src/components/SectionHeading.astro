@@ -1,0 +1,39 @@
+---
+// Centered section header: optional eyebrow, an animated <h2>, optional
+// subtitle. Used by "Why Play Matters", "See It In Action", and the catalog
+// hero-style headers. `size` covers the two heading scales in the source.
+interface Props {
+  title: string;
+  subtitle?: string;
+  eyebrow?: { text: string; color: string };
+  size?: "lg" | "md";
+  maxWidth?: string;
+  class?: string;
+}
+const {
+  title,
+  subtitle,
+  eyebrow,
+  size = "lg",
+  maxWidth = "max-w-3xl",
+  class: className = "mb-16",
+} = Astro.props;
+
+const titleSize =
+  size === "lg" ? "text-4xl md:text-5xl" : "text-3xl md:text-4xl";
+const titleMargin = subtitle ? "mb-6" : "";
+---
+
+<div class={`text-center ${maxWidth} mx-auto ${className}`}>
+  {
+    eyebrow && (
+      <span class={`${eyebrow.color} font-bold tracking-wider uppercase text-sm mb-2 block`}>
+        {eyebrow.text}
+      </span>
+    )
+  }
+  <h2 data-hide class={`reveal font-display ${titleSize} font-bold text-gray-900 ${titleMargin}`}>
+    {title}
+  </h2>
+  {subtitle && <p data-hide class="reveal text-lg text-gray-600">{subtitle}</p>}
+</div>

@@ -1,0 +1,39 @@
+---
+// Product-detail layout. Nests BaseLayout (the layout-composition demo, AC3c):
+// forwards the SEO trio through, and renders the shared detail hero scaffold
+// (gradient band + colored eyebrow + title + intro) itself. Per-product body
+// sections (feature block, stats, gallery, CTA) come through the <slot />.
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  productTitle: string;
+  eyebrow: { text: string; color: string };
+  heroIntro: string;
+}
+const { title, description, ogImage, productTitle, eyebrow, heroIntro } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} ogImage={ogImage}>
+  <section class="pt-16 pb-12 bg-gradient-to-b from-pink-50 to-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8">
+        <span class={`${eyebrow.color} font-bold tracking-wider uppercase text-sm mb-2 block`}>
+          {eyebrow.text}
+        </span>
+        <h1
+          data-hide
+          class="reveal font-display text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight mb-6"
+        >
+          {productTitle}
+        </h1>
+        <p data-hide class="reveal text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          {heroIntro}
+        </p>
+      </div>
+    </div>
+  </section>
+  <slot />
+</BaseLayout>

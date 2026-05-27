@@ -1,0 +1,92 @@
+---
+import LogoIconFooter from "./icons/LogoIconFooter.astro";
+import InstagramIcon from "./icons/InstagramIcon.astro";
+import XIcon from "./icons/XIcon.astro";
+
+// Newsletter form + social/contact links are kept as static, non-functional
+// markup, exactly as in the source site.
+const quickLinks = [
+  { href: "/#why-play", label: "Why Play Matters" },
+  { href: "/catalog", label: "Playground Catalog" },
+  { href: "/#sanctuaries", label: "Sanctuaries" },
+  { href: "#", label: "Contact Us" },
+];
+---
+
+<footer class="bg-gray-900 text-white py-16">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 border-b border-gray-800 pb-12">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-2 mb-6">
+          <LogoIconFooter class="w-8 h-8 text-green-500" />
+          <span class="font-display font-bold text-2xl">PandaPlay</span>
+        </div>
+        <p class="text-gray-400 mb-6 max-w-sm">
+          Designing a better, more playful world for giant pandas, one sanctuary at a time.
+        </p>
+        <div class="flex space-x-4">
+          <a
+            href="#"
+            aria-label="PandaPlay on Instagram"
+            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-500 transition-colors"
+          >
+            <InstagramIcon class="w-5 h-5" />
+          </a>
+          <a
+            href="#"
+            aria-label="PandaPlay on X"
+            class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-500 transition-colors"
+          >
+            <XIcon class="w-5 h-5" />
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-display font-bold text-lg mb-4">Quick Links</h4>
+        <ul class="space-y-2 text-gray-400">
+          {
+            quickLinks.map((link) => (
+              <li>
+                <a href={link.href} class="hover:text-green-500 transition">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display font-bold text-lg mb-4">Stay Updated</h4>
+        <p class="text-sm text-gray-400 mb-4">
+          Subscribe for news on panda playtime and global sanctuary projects.
+        </p>
+        <form class="flex">
+          <label class="sr-only" for="footer-email">Your email address</label>
+          <input
+            id="footer-email"
+            type="email"
+            placeholder="Your email address"
+            class="bg-gray-800 text-white px-4 py-2 rounded-l-full w-full focus:outline-hidden focus:ring-2 focus:ring-green-500 border-none"
+          />
+          <button
+            type="submit"
+            class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-r-full font-bold transition-colors"
+          >
+            Join
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="text-center text-gray-500 text-sm">
+      &copy; 2026 PandaPlay. All rights reserved.
+      <p class="mt-2">
+        Created with Pinegrow Online.
+        <a
+          href="http://pinegrow.online/"
+          class="text-green-500 hover:text-green-400 underline transition-colors"
+          >Sign up for your free account.</a
+        >
+      </p>
+    </div>
+  </div>
+</footer>
