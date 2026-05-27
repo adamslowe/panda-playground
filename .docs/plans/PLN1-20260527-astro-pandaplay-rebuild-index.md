@@ -27,7 +27,7 @@ This is a teaching artifact for a live demo, so **clarity of the Astro patterns 
 - A `playgrounds` **content collection** modelling all **6** products (2 available + 4 coming-soon) with a typed Zod schema; the catalog grid and the detail pages are generated from it.
 - Dynamic product detail routing via `[slug].astro` + `getStaticPaths()` over the collection (replaces the two hand-written detail HTML files).
 - **Tailwind v4** through the official `@tailwindcss/vite` plugin (`astro add tailwind`), compiling from real source; the pre-compiled `htmlsite/tailwind_theme/tailwind.css` is **discarded**.
-- **Fonts via the Astro 6 Fonts API** (`experimental.fonts`, Google provider, self-hosted) for Nunito Sans + Quicksand — replaces the source's Google Fonts CDN `@import`.
+- **Fonts via the Astro 6 Fonts API** (top-level `fonts:` key, Google provider, self-hosted) for Nunito Sans + Quicksand — replaces the source's Google Fonts CDN `@import`. *(Amended: stable/top-level in 6.3.8, not `experimental.fonts` — see Execution notes.)*
 - The 3 source JPEGs moved into `src/assets/` and rendered through `astro:assets` `<Image />` for automatic optimization.
 - Scroll-reveal animations preserved using **`motion` as an npm dependency**, loaded from one shared `<script>` in the layout (replaces the per-page CDN import + inline `[data-hide]` opacity script).
 - **Dynamic island (demo feature)** — one interactive client island: a catalog filter (All / Available / Coming Soon) built as a **Preact** component hydrated with `client:visible`, demonstrating partial hydration against the otherwise zero-JS pages.
@@ -148,7 +148,7 @@ Decisions deferred to the **Approach gate** (HOW, not WHAT): flash-prevention me
 - `pnpm add sharp` — **required**, not optional. Prototyping confirmed the build fails with `MissingSharp` when rendering `<Image />` without it in this pnpm setup; installing sharp makes optimization succeed (verified: JPEGs → webp).
 - `pnpm dlx astro add preact` — installs `@astrojs/preact` + preact, wires the integration. Used only for the one island component.
 - `pnpm dlx astro add node` — installs `@astrojs/node`, sets `adapter: node({ mode: 'standalone' })`. `output` stays the default `'static'` (Astro 6 prerenders by default; SSR is opted into per-route). Adding the adapter does **not** make the whole site SSR.
-- **Fonts via the Astro 6 Fonts API** (no CDN `@import` — self-hosted and optimized). Enable `experimental: { fonts: [...] }` in `astro.config.mjs` with `fontProviders.google()` for *Nunito Sans* (`cssVariable: '--font-nunito-sans'`) and *Quicksand* (`cssVariable: '--font-quicksand'`), each with the weights the source uses and `fallbacks: ['sans-serif']`. `BaseLayout` head renders `<Font cssVariable="--font-nunito-sans" preload />` (body font, preloaded) and `<Font cssVariable="--font-quicksand" />`, imported from `astro:assets`. This replaces the source's Google Fonts CDN line entirely. *(Note: `fonts` is behind `experimental` in Astro 6 — acceptable and on-message for a demo of a flagship feature; flagged as experimental.)*
+- **Fonts via the Astro 6 Fonts API** (no CDN `@import` — self-hosted and optimized). Configure a **top-level `fonts: [...]`** key in `astro.config.mjs` (imported via `import { defineConfig, fontProviders } from 'astro/config'`) with `fontProviders.google()` for *Nunito Sans* (`cssVariable: '--font-nunito-sans'`) and *Quicksand* (`cssVariable: '--font-quicksand'`), each with the weights the source uses and `fallbacks: ['sans-serif']`. `BaseLayout` head renders `<Font cssVariable="--font-nunito-sans" preload />` (body font, preloaded) and `<Font cssVariable="--font-quicksand" />`, imported from `astro:assets`. This replaces the source's Google Fonts CDN line entirely. *(Amended 2026-05-27: the Fonts API is **stable and top-level** in installed Astro 6.3.8 — verified that `experimental.fonts` fails config validation. Still a flagship-feature demo beat.)*
 - `src/styles/global.css` carries:
   - `@theme inline { --font-sans: var(--font-nunito-sans); --font-display: var(--font-quicksand); }` — backs the Tailwind `font-sans`/`font-display` utilities with the Astro font CSS variables. `inline` is required so Tailwind emits `var(--font-nunito-sans)` (which the `<Font>`-injected `@font-face` resolves) rather than copying a literal. `font-sans` is the body default; `font-display` is used on all headings.
   - `[data-hide] { opacity: 0; }` — replaces the source's inline `<head>` IIFE; loads before paint so reveals are flicker-free.
@@ -195,7 +195,7 @@ Decisions deferred to the **Approach gate** (HOW, not WHAT): flash-prevention me
 
 All work is **new files in `src/`** plus config/README. Net changes:
 - **New:** `src/layouts/{BaseLayout,ProductLayout}.astro`; `src/components/{Seo,Nav,Footer,Button,Badge,ProductCard,FeatureCard,StatCard,SectionHeading}.astro` + `src/components/icons/*.astro` + `src/components/CatalogFilter.tsx` (Preact island); `src/content.config.ts`; `src/content/playgrounds/*.md` (6); `src/pages/catalog.astro`; `src/pages/playgrounds/[slug].astro`; `src/pages/quote.astro` (SSR); `src/styles/global.css`; `src/assets/playgrounds/*.jpeg` (3).
-- **Replaced:** `src/pages/index.astro` (starter → real home); `astro.config.mjs` (Tailwind plugin + `experimental.fonts` + Preact + Node adapter); `README.md`; `package.json`/lockfile (deps incl. `motion`, `sharp`, `@astrojs/preact`+`preact`, `@astrojs/node`, and the `pnpm.overrides` Vite-7 pin).
+- **Replaced:** `src/pages/index.astro` (starter → real home); `astro.config.mjs` (Tailwind plugin + top-level `fonts:` + Preact + Node adapter); `README.md`; `package.json`/lockfile (deps incl. `motion`, `sharp`, `@astrojs/preact`+`preact`, `@astrojs/node`, and the `pnpm.overrides` Vite-7 pin).
 - **Untouched:** `htmlsite/` (reference), `public/favicon.*`, `tsconfig.json`.
 - No shared/production state, no external services, no migrations. The Node adapter changes the **build output shape** (adds `dist/server/`) but the site still prerenders everything except `/quote`.
 
@@ -205,7 +205,7 @@ The running Astro site (5 routes: 4 SSG + 1 SSR); two nested layouts; the compon
 
 ### Delivery — order of work
 
-1. **Setup** — `astro add tailwind`; `pnpm add motion sharp`; `astro add preact`; `astro add node` (`mode: 'standalone'`); pin Vite 7 (`pnpm.overrides`); configure `experimental.fonts` (Nunito Sans + Quicksand via `fontProviders.google()`); author `global.css` (`@import "tailwindcss"` + `@theme inline` mapping the font tokens to the Astro font vars + `[data-hide]`). *Checkpoint: dev server boots, Tailwind utility renders, fonts load self-hosted.*
+1. **Setup** — `astro add tailwind`; `pnpm add motion sharp`; `astro add preact`; `astro add node` (`mode: 'standalone'`); pin Vite 7 (`pnpm.overrides`); configure top-level `fonts:` (Nunito Sans + Quicksand via `fontProviders.google()`); author `global.css` (`@import "tailwindcss"` + `@theme inline` mapping the font tokens to the Astro font vars + `[data-hide]`). *Checkpoint: dev server boots, Tailwind utility renders, fonts load self-hosted.*
 2. **Layouts + chrome** — `BaseLayout`, `Seo`, `Nav`, `Footer`, shared Motion `<script>`; `ProductLayout` nesting `BaseLayout`.
 3. **Primitives** — `Button`, `Badge`, `SectionHeading`, `icons/*`.
 4. **Collection** — `content.config.ts` schema; the 6 entries; move images into `src/assets/`.
@@ -226,7 +226,7 @@ Validated by `astro build`, dev server boot, and browser screenshots against `ht
 
 **README.md** rewritten to describe PandaPlay: what the demo shows, project structure (layouts/components/collection/assets), and `pnpm dev`/`build`/`preview`. **Must include the SSR demo run instructions** — after `pnpm build`, start the Node server with `node ./dist/server/entry.mjs` (localhost:8080) to serve the `/quote` SSR route, and the note that the static routes are real files in `dist/` while `/quote` is computed per request (the presenter beat). Also note that in `astro dev` the `/quote` route is served by Vite, not the Node adapter (resolves review R3/MD1). Doubles as the presenter cheat-sheet. No decision log/changelog/requirements catalog in this repo; none required.
 
-A short combined `astro.config.mjs` reference (Tailwind Vite plugin + `experimental.fonts` + Preact + Node adapter, composed in one config) is captured here so the four integrations are wired together, not piecemeal (resolves review MD3).
+A short combined `astro.config.mjs` reference (Tailwind Vite plugin + top-level `fonts:` + Preact + Node adapter, composed in one config) is captured here so the four integrations are wired together, not piecemeal (resolves review MD3).
 
 ## Approach + Delivery approval record
 
@@ -263,7 +263,7 @@ The implementing agent must pass all of these before handoff. Leave checkboxes u
 #### Source and file checks
 
 - [ ] `astro.config.mjs` — search `'@tailwindcss/vite'`: 1 match (Vite plugin wired). [AC6]
-- [ ] `astro.config.mjs` — search `'fontProviders.google'`: 2 matches (Nunito Sans + Quicksand under `experimental.fonts`); search `'experimental'`: ≥1 match. [AC6]
+- [ ] `astro.config.mjs` — search `'fontProviders.google'`: 2 matches (Nunito Sans + Quicksand under the top-level `fonts:` key). [AC6] *(Amended 2026-05-27: Fonts API is stable/top-level in Astro 6.3.8, not `experimental.fonts`; the prior `search 'experimental': ≥1 match` line was removed — see Execution notes deviation.)*
 - [ ] `astro.config.mjs` — search `"mode: 'standalone'"`: 1 match (Node adapter). [AC14]
 - [ ] `astro.config.mjs` — search `'@astrojs/preact'`: 1 match (import); search `'preact()'`: 1 match (in the `integrations:` array). [AC13]
 - [ ] `astro.config.mjs` — `output` stays default `'static'`: search `"output: 'server'"`: 0 matches **and** `'output: "server"'`: 0 matches (per-route `prerender=false` is the SSR mechanism, not a global `output: 'server'`). [AC14]
@@ -413,9 +413,49 @@ To execute this plan in a new session:
 4. Follow the **Delivery — order of work** (10 steps: setup → layouts → primitives → collection → cards → SSG pages → island → SSR route → README → verify). Demo features (island, SSR) come last as additive layers.
 5. Mode is **guided + inline orchestrator + main branch**; **every commit needs explicit approval** (show diff-summary + message, wait). Record deviations/decisions in `Execution notes / deviations` as they happen, not at the end.
 6. Run the **Acceptance checkpoint** Agent Verification before handoff; Manual Verification is the user's.
-7. **Watch items flagged during planning:** `experimental.fonts` is an experimental Astro flag; `sharp` is a required install (build fails without it — verified); Vite pinned to `^7` via `pnpm.overrides`; `z.array(image())` gallery is prototype-verified working in this repo's Astro 6.3.8.
+7. **Watch items flagged during planning:** Fonts API is configured via a **top-level `fonts:` key** (it graduated from experimental — `experimental.fonts` fails to build in 6.3.8; see Execution notes deviation); `sharp` is a required install (build fails without it — verified); Vite pinned to `^7` via `pnpm.overrides`; `z.array(image())` gallery is prototype-verified working in this repo's Astro 6.3.8.
 
 ## Execution notes / deviations
+
+**Pre-execution baseline (2026-05-27):**
+- `pnpm build` on the stock starter → exit 0, clean (1 page built).
+- `pnpm exec astro check` → **required installing `@astrojs/check` + `typescript`** first (Astro prompts for it; not present in the stock starter). After `pnpm add -D @astrojs/check typescript` (→ `@astrojs/check@0.9.9`, `typescript@6.0.3`), `astro check` reports **0 errors, 0 warnings, 0 hints** (3 files). Baseline is clean.
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Decision
+- `Summary:` Installed `@astrojs/check` + `typescript` as devDependencies during baseline setup.
+- `Reason:` The plan's standard gate `pnpm exec astro check` (AC1) requires `@astrojs/check`; it is not in the stock starter and Astro prompts to install it interactively. Installing it non-interactively is a prerequisite for the type-check gate, implied by the plan rather than new scope.
+- `Affected sections / artifacts:` `package.json` devDependencies, `pnpm-lock.yaml`.
+- `User approval:` Not required (record-only — enables an already-planned verification gate; no behavior/scope change).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` `tsconfig.json` was modified by `astro add preact` (added `compilerOptions.jsx: "react-jsx"` + `jsxImportSource: "preact"`, and reformatted the `include`/`exclude` arrays). The plan's *Affected surfaces* listed `tsconfig.json` as "Untouched."
+- `Reason:` The Preact integration requires this JSX config for the `.tsx` island to type-check and compile; `astro add preact` writes it automatically. The `extends: "astro/tsconfigs/strict"` base (the plan's TypeScript constraint) is preserved — strictness is unchanged.
+- `Affected sections / artifacts:` `tsconfig.json`; plan's "Affected surfaces and ownership boundaries → Untouched" line.
+- `User approval:` Not required (low-risk record-only — necessary consequence of an approved install; no change to approved scope, behavior, or the strict-TS decision).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` The Astro Fonts API is configured under a **stable top-level `fonts:`** key in astro.config.mjs, **not** `experimental.fonts` as the plan specified. Verified against installed Astro 6.3.8: `fonts` is a top-level schema key (`base.js:311`); the `experimental` block is `.strict()` and rejects `fonts` — `astro sync` with `experimental.fonts` fails with "Invalid or outdated experimental feature" (exit 1). The Fonts API graduated out of experimental before 6.3.8.
+- `Reason:` The plan's `experimental.fonts` shape does not build in this version. The *requirement* (Req 5 / AC6 — both fonts via the Astro Fonts API, self-hosted, no Google CDN) is unaffected; only the config key location and one verification line change. `fontProviders.google()`, the `<Font>` component, self-hosting, and the `@theme inline` token mapping are all unchanged.
+- `Affected sections / artifacts:` `astro.config.mjs`; plan Scope/Approach/Constraints font references; **AC6 Agent Verification** — the `search 'experimental': ≥1 match` line is removed (now incorrect); `fontProviders.google: 2 matches` is retained.
+- `User approval:` **Received** (Adam Lowe, 2026-05-27 — "Use top-level, fix AC6 check"). Plan body + AC6 amended to match.
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Deviation
+- `Summary:` The `pnpm.overrides.vite: "^7"` pin is present in `package.json` but pnpm does **not** write an `overrides:` block into `pnpm-lock.yaml`, because the natural resolution already lands on Vite 7 (Astro 6.3.8 + `@tailwindcss/vite` both require Vite 7), making the override a redundant no-op that pnpm elides. Verified end state: exactly one Vite version linked (`7.3.3`), zero Vite 8. The pin still functions as a drift guard — it would force Vite back to 7 if a future dependency tried to pull 8.
+- `Reason:` pnpm 9 only records overrides in the lockfile when they change a resolution. The plan's AC verifies via `pnpm list vite` / `pnpm why vite` showing a single major-7 Vite — which holds. No action needed; recording so the closeout verifier doesn't flag the absent lockfile block as a miss.
+- `Affected sections / artifacts:` `package.json` (`pnpm.overrides`); `pnpm-lock.yaml` (no override block, as expected). The Vite-7 AC check (`pnpm why vite` → single major 7) passes.
+- `User approval:` Not required (low-risk record-only — constraint intent satisfied; the pin is present and functional).
 
 ## Closeout record
 

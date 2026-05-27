@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/*
+ * Map Tailwind's font-sans / font-display utilities onto the CSS variables
+ * emitted by the Astro Fonts API (<Font> injects the matching @font-face).
+ * `inline` makes Tailwind emit `var(--font-nunito-sans)` rather than copying
+ * a literal family name, so the self-hosted fonts resolve.
+ *   font-sans    -> body default (Nunito Sans)
+ *   font-display -> headings (Quicksand)
+ */
+@theme inline {
+  --font-sans: var(--font-nunito-sans), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-quicksand), system-ui, -apple-system, sans-serif;
+}
+
+/*
+ * Flicker-prevention: reveal elements start hidden so they don't flash fully
+ * visible before the Motion scroll-reveal animates them in. Replaces the
+ * source's inline <head> IIFE; loads with the stylesheet, before first paint.
+ */
+[data-hide] {
+  opacity: 0;
+}
