@@ -1,10 +1,11 @@
 import { useState } from "preact/hooks";
 
-// The one hydrated island. Astro renders all 6 ProductCards server-side (SSG);
-// this ~1 KB control is the only component that ships JS. It filters by
-// toggling Tailwind's `hidden` class on each card wrapper (read via its
-// data-status), rather than re-rendering the grid — so the cards stay static
-// HTML and only this bar hydrates (client:visible on the catalog page).
+// The one hydrated island. Astro renders all 6 ProductCards at build time
+// (SSG, prerendered to static HTML); this ~1 KB control is the only component
+// that ships JS. It filters by toggling Tailwind's `hidden` class on each card
+// wrapper (read via its data-status), rather than re-rendering the grid — so
+// the cards stay static HTML and only this bar hydrates (client:visible on the
+// catalog page).
 
 type Filter = "all" | "available" | "coming-soon";
 

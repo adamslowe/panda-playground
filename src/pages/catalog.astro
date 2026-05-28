@@ -4,9 +4,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import ProductCard from "../components/ProductCard.astro";
 import CatalogFilter from "../components/CatalogFilter.tsx";
 
-// All 6 products, collection-sourced, ordered. Astro renders every card
-// server-side (SSG, SEO-friendly); the filter island (Step 7) only toggles
-// their visibility via the data-status hook on each card wrapper.
+// All 6 products, collection-sourced, ordered. Astro renders every card at
+// build time (SSG, prerendered to static HTML, SEO-friendly); the filter
+// island only toggles their visibility via the data-status hook on each card
+// wrapper.
 const products = (await getCollection("playgrounds")).sort((a, b) => a.data.order - b.data.order);
 
 // Stagger delays cycle every 3 cards to match the source grid rhythm.
