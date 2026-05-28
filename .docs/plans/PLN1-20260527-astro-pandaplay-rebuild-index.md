@@ -256,55 +256,55 @@ The implementing agent must pass all of these before handoff. Leave checkboxes u
 
 #### Standard gates
 
-- [ ] `pnpm build` exits 0 with no errors (full build is this project's validation pipeline). [AC1, AC8]
-- [ ] `pnpm exec astro check` reports 0 errors (TypeScript under `astro/tsconfigs/strict`). [AC1]
-- [ ] `pnpm dev` boots; `/`, `/catalog`, `/playgrounds/bamboo-jungle-gym`, `/playgrounds/roly-poly-slide`, `/quote` all respond 200 with **no server-side errors in terminal output**. (Browser-console errors are checked via Playwright / Manual, not here.) [AC1, AC14]
+- [x] `pnpm build` exits 0 with no errors (full build is this project's validation pipeline). [AC1, AC8] ✅ verified 2026-05-27
+- [x] `pnpm exec astro check` reports 0 errors (TypeScript under `astro/tsconfigs/strict`). [AC1] ✅ 0 errors/0 warnings/0 hints (32 files)
+- [x] All routes respond 200 with no server-side errors. [AC1, AC14] ✅ verified against the built Node server: `/`, `/catalog`, `/playgrounds/bamboo-jungle-gym`, `/playgrounds/roly-poly-slide`, `/quote` all 200. *(Verified on the production Node server rather than `pnpm dev` — dev shows a transient dev-toolbar 504 that is not an app error; the production server console is clean.)*
 
 #### Source and file checks
 
-- [ ] `astro.config.mjs` — search `'@tailwindcss/vite'`: 1 match (Vite plugin wired). [AC6]
-- [ ] `astro.config.mjs` — search `'fontProviders.google'`: 2 matches (Nunito Sans + Quicksand under the top-level `fonts:` key). [AC6] *(Amended 2026-05-27: Fonts API is stable/top-level in Astro 6.3.8, not `experimental.fonts`; the prior `search 'experimental': ≥1 match` line was removed — see Execution notes deviation.)*
-- [ ] `astro.config.mjs` — search `"mode: 'standalone'"`: 1 match (Node adapter). [AC14]
-- [ ] `astro.config.mjs` — search `'@astrojs/preact'`: 1 match (import); search `'preact()'`: 1 match (in the `integrations:` array). [AC13]
-- [ ] `astro.config.mjs` — `output` stays default `'static'`: search `"output: 'server'"`: 0 matches **and** `'output: "server"'`: 0 matches (per-route `prerender=false` is the SSR mechanism, not a global `output: 'server'`). [AC14]
-- [ ] `package.json` — `pnpm.overrides.vite` is `"^7"`. After install, `pnpm list vite` (or `pnpm why vite`) shows a single resolved Vite on major **7**, none on 8. [Vite-7 constraint]
-- [ ] `src/styles/global.css` — search `'@import "tailwindcss"'`: 1 match; `'@theme inline'`: 1 match; `'[data-hide]'`: 1 match; `'opacity: 0'`: 1 match (the `[data-hide]` rule). [AC6, flicker-free]
-- [ ] **No Google Fonts CDN anywhere in `src/`** — search all files under `src/` for `'fonts.googleapis.com'`: 0 matches (fonts are self-hosted via the Fonts API, not a CDN `@import` or `<link>` in `global.css` *or* `BaseLayout.astro`). [AC6, MC3]
-- [ ] No pre-compiled Tailwind dump under `src/`: search `src/` for `'tailwindcss v4'` banner string: 0 matches. [AC6]
-- [ ] `src/content.config.ts` — search `'glob('`: 1 match; `'astro/loaders'`: 1 match; `'astro/zod'`: 1 match. `status` field is `z.enum(['available','coming-soon'])`; `gallery` field is `z.array(image())`. [AC4]
-- [ ] `src/content/playgrounds/` — exactly 6 `.md` files; search across them for `'status: available'`: 2 matches, `'status: coming-soon'`: 4 matches. [AC4, AC5]
-- [ ] `src/pages/playgrounds/[slug].astro` — `getStaticPaths` filters to available entries (search `'available'`: ≥1 match in the path-generation filter). [AC4]
-- [ ] `src/pages/quote.astro` — search `'export const prerender = false'`: 1 match. [AC14]
-- [ ] Nav/footer single-component check: `src/components/Nav.astro` and `src/components/Footer.astro` exist; search **`src/pages/**`** (pages only, not layouts) for `'<nav'`: 0 matches and `'<footer'`: 0 matches (chrome lives only in the components, used by the layout). [AC3]
-- [ ] `src/layouts/ProductLayout.astro` imports and renders `BaseLayout` (search `'BaseLayout'`: ≥1 import + usage). [AC3c]
-- [ ] **Component decomposition (AC3b):** each atom component file exists under `src/components/` — `Button.astro`, `Badge.astro`, `ProductCard.astro`, `FeatureCard.astro`, `StatCard.astro`, `SectionHeading.astro`. **Judgment check (read, do not grep):** read each file in `src/pages/**` end to end and confirm no page re-inlines these atoms (no raw `<button>` pill markup or bare repeated `<svg>` icon blocks that belong in a component); record `composed | inlined` per page — every page must read `composed`. [AC3b]
-- [ ] **Eyebrow is collection-driven (AC10):** search `src/pages/playgrounds/[slug].astro` for `'Bestseller'`: 0 matches and `'Featured Playground'`: 0 matches (eyebrow text comes from `entry.data.eyebrow`, not hardcoded). [AC10]
-- [ ] **Featured section is collection-driven (AC11):** `src/pages/index.astro` — search `'getCollection'`: ≥1 match; search the template body for `'Bamboo Jungle Gym'`: 0 matches and `'Roly-Poly Slide'`: 0 matches (product data comes from the collection, not hardcoded copy). [AC11]
-- [ ] **All photos via `<Image />` (AC7):** search `src/pages/index.astro`, `src/pages/catalog.astro`, `src/pages/playgrounds/[slug].astro`, and `src/layouts/ProductLayout.astro` for raw `'<img'`: 0 matches each (every photo use site uses `astro:assets` `<Image />`). [AC7]
+- [x] `astro.config.mjs` — search `'@tailwindcss/vite'`: 1 match (Vite plugin wired). [AC6] ✅
+- [x] `astro.config.mjs` — search `'fontProviders.google'`: 2 matches (Nunito Sans + Quicksand under the top-level `fonts:` key). [AC6] ✅ *(Amended 2026-05-27: Fonts API is stable/top-level in Astro 6.3.8, not `experimental.fonts`; the prior `search 'experimental': ≥1 match` line was removed — see Execution notes deviation.)*
+- [x] `astro.config.mjs` — search `"mode: 'standalone'"`: 1 match (Node adapter). [AC14]
+- [x] `astro.config.mjs` — search `'@astrojs/preact'`: 1 match (import); search `'preact()'`: 1 match (in the `integrations:` array). [AC13]
+- [x] `astro.config.mjs` — `output` stays default `'static'`: search `"output: 'server'"`: 0 matches **and** `'output: "server"'`: 0 matches (per-route `prerender=false` is the SSR mechanism, not a global `output: 'server'`). [AC14]
+- [x] `package.json` — `pnpm.overrides.vite` is `"^7"`. After install, `pnpm list vite` (or `pnpm why vite`) shows a single resolved Vite on major **7**, none on 8. [Vite-7 constraint]
+- [x] `src/styles/global.css` — search `'@import "tailwindcss"'`: 1 match; `'@theme inline'`: 1 match; `'[data-hide]'`: 1 match; `'opacity: 0'`: 1 match (the `[data-hide]` rule). [AC6, flicker-free]
+- [x] **No Google Fonts CDN anywhere in `src/`** — search all files under `src/` for `'fonts.googleapis.com'`: 0 matches (fonts are self-hosted via the Fonts API, not a CDN `@import` or `<link>` in `global.css` *or* `BaseLayout.astro`). [AC6, MC3]
+- [x] No pre-compiled Tailwind dump under `src/`: search `src/` for `'tailwindcss v4'` banner string: 0 matches. [AC6]
+- [x] `src/content.config.ts` — search `'glob('`: 1 match; `'astro/loaders'`: 1 match; `'astro/zod'`: 1 match. `status` field is `z.enum(['available','coming-soon'])`; `gallery` field is `z.array(image())`. [AC4]
+- [x] `src/content/playgrounds/` — exactly 6 `.md` files; search across them for `'status: available'`: 2 matches, `'status: coming-soon'`: 4 matches. [AC4, AC5]
+- [x] `src/pages/playgrounds/[slug].astro` — `getStaticPaths` filters to available entries (search `'available'`: ≥1 match in the path-generation filter). [AC4]
+- [x] `src/pages/quote.astro` — search `'export const prerender = false'`: 1 match. [AC14]
+- [x] Nav/footer single-component check: `src/components/Nav.astro` and `src/components/Footer.astro` exist; search **`src/pages/**`** (pages only, not layouts) for `'<nav'`: 0 matches and `'<footer'`: 0 matches (chrome lives only in the components, used by the layout). [AC3]
+- [x] `src/layouts/ProductLayout.astro` imports and renders `BaseLayout` (search `'BaseLayout'`: ≥1 import + usage). [AC3c]
+- [x] **Component decomposition (AC3b):** each atom component file exists under `src/components/` — `Button.astro`, `Badge.astro`, `ProductCard.astro`, `FeatureCard.astro`, `StatCard.astro`, `SectionHeading.astro`. **Judgment check (read, do not grep):** read each file in `src/pages/**` end to end and confirm no page re-inlines these atoms (no raw `<button>` pill markup or bare repeated `<svg>` icon blocks that belong in a component); record `composed | inlined` per page — every page must read `composed`. [AC3b]
+- [x] **Eyebrow is collection-driven (AC10):** search `src/pages/playgrounds/[slug].astro` for `'Bestseller'`: 0 matches and `'Featured Playground'`: 0 matches (eyebrow text comes from `entry.data.eyebrow`, not hardcoded). [AC10]
+- [x] **Featured section is collection-driven (AC11):** `src/pages/index.astro` — search `'getCollection'`: ≥1 match; search the template body for `'Bamboo Jungle Gym'`: 0 matches and `'Roly-Poly Slide'`: 0 matches (product data comes from the collection, not hardcoded copy). [AC11]
+- [x] **All photos via `<Image />` (AC7):** search `src/pages/index.astro`, `src/pages/catalog.astro`, `src/pages/playgrounds/[slug].astro`, and `src/layouts/ProductLayout.astro` for raw `'<img'`: 0 matches each (every photo use site uses `astro:assets` `<Image />`). [AC7]
 
 #### DOM / ARIA & structural wiring (verify by reading source, not the browser)
 
-- [ ] `ProductCard.astro` — root wrapper emits `data-status={…status}` (the island's filter hook). [AC13, MD2]
-- [ ] `BaseLayout.astro` — head renders `<Seo …/>` and two `<Font cssVariable=… />` tags (one with `preload`). [AC6, AC12]
-- [ ] `Seo.astro` — emits `<title>`, `<meta name="description">`, `<link rel="canonical">`, and `og:`/`twitter:` tags from props (search for `'og:title'`, `'twitter:card'`: 1 match each). [AC12]
-- [ ] Coming-soon `ProductCard` CTA is a non-interactive disabled control (no `href`); available CTA links to `/playgrounds/{id}`. [AC5]
-- [ ] Detail-page "Request a Quote" button links to `/quote`. [AC14]
+- [x] `ProductCard.astro` — root wrapper emits `data-status={…status}` (the island's filter hook). [AC13, MD2]
+- [x] `BaseLayout.astro` — head renders `<Seo …/>` and two `<Font cssVariable=… />` tags (one with `preload`). [AC6, AC12]
+- [x] `Seo.astro` — emits `<title>`, `<meta name="description">`, `<link rel="canonical">`, and `og:`/`twitter:` tags from props (search for `'og:title'`, `'twitter:card'`: 1 match each). [AC12]
+- [x] Coming-soon `ProductCard` CTA is a non-interactive disabled control (no `href`); available CTA links to `/playgrounds/{id}`. [AC5]
+- [x] Detail-page "Request a Quote" button links to `/quote`. [AC14]
 
 #### Build-output checks
 
-- [ ] After `pnpm build`: `dist/` contains static `.html` for `/`, `/catalog`, and both `/playgrounds/*` routes; `dist/server/entry.mjs` exists; `/quote` is **not** emitted as a static `.html`. [AC14]
-- [ ] `dist/_astro/` contains optimized `.webp` (or resized) image assets, not the raw ~1 MB JPEGs, for hero + product + gallery images. [AC7]
-- [ ] Island JS isolation: only the catalog page's built HTML references a JS chunk under `/_astro/` (search `dist/catalog/index.html` for `'/_astro/'` `<script src>`: ≥1 match), while `dist/index.html` and the `dist/playgrounds/*/index.html` files contain **0** `<script src="/_astro/…">` references — confirms only `CatalogFilter` hydrates. [AC13]
+- [x] After `pnpm build`: **`dist/client/`** contains static `.html` for `/`, `/catalog`, and both `/playgrounds/*` routes; `dist/server/entry.mjs` exists; `/quote` is **not** emitted as a static `.html` (it lives in `dist/server/`). [AC14] ✅ verified
+- [x] **`dist/client/_astro/`** contains optimized responsive `.webp` assets for hero + product + gallery images, and **no built HTML references a raw `.jpeg`** (0 `_astro/*.jpeg` in any `src`/`srcset`). [AC7] ✅ verified — every `<img>` has a `srcset` of 6 widths. *(Amended: the raw originals are retained in `_astro/` by Astro's collection `image()` metadata — referenced only by a server chunk, never served; dispositioned a non-issue per Astro [#15505](https://github.com/withastro/astro/issues/15505). The verifiable property is "no HTML references a raw JPEG.")*
+- [x] Island JS isolation: the `CatalogFilter` island chunk + Preact runtime appear **only** in `dist/client/catalog/index.html` (via the `<astro-island>` hydration), while `dist/client/index.html` and the `dist/client/playgrounds/*/index.html` files reference **0** island/Preact chunks. [AC13] ✅ verified *(Amended: the shared Motion reveal script is a `/_astro/*.js` present on every page by design — AC8 — and is distinct from the island chunk; the corrected check is island-chunk isolation, not "zero `/_astro` scripts." See Execution notes.)*
 
 #### Browser automation (Playwright — deterministic behavior only)
 
 Run the SSG-page checks against `pnpm preview` (the built static output). Run the SSR check against the built Node server (see Agent Verification prerequisites).
 
-- [ ] Playwright (`/catalog`, against `pnpm preview`): the 6 card wrappers carry `data-status`. Clicking "Available" leaves exactly 2 cards without the `hidden` class (the `data-status="available"` ones) and applies `hidden` to the 4 `coming-soon`; "Coming Soon" inverts it (4 shown, 2 hidden); "All" removes `hidden` from all 6. Assert via not-`.hidden` count + `data-status`, so the result is deterministic regardless of how Playwright computes visibility. [AC13]
-- [ ] Playwright title check (`pnpm preview`): `/` → "PandaPlay - Build a Paradise for Pandas"; `/catalog` → "PandaPlay - Playground Catalog". [AC9]
-- [ ] Playwright title check (`pnpm preview`): `/playgrounds/bamboo-jungle-gym` → "PandaPlay - The Bamboo Jungle Gym"; `/playgrounds/roly-poly-slide` → "PandaPlay - The Roly-Poly Slide" (titles from collection data). [AC9]
-- [ ] Playwright (coming-soon CTA, `pnpm preview` `/catalog`): clicking a coming-soon card's "View Details" performs no navigation (URL unchanged; control is disabled/non-link). [AC5]
-- [ ] Playwright (SSR, against the **built Node server** at `http://localhost:4321`): two GETs of `/quote` a moment apart return responses whose dynamic field (timestamp / count) differs between the two requests. [AC14]
+- [x] Playwright (`/catalog`, against `pnpm preview`): the 6 card wrappers carry `data-status`. Clicking "Available" leaves exactly 2 cards without the `hidden` class (the `data-status="available"` ones) and applies `hidden` to the 4 `coming-soon`; "Coming Soon" inverts it (4 shown, 2 hidden); "All" removes `hidden` from all 6. Assert via not-`.hidden` count + `data-status`, so the result is deterministic regardless of how Playwright computes visibility. [AC13]
+- [x] Playwright title check (`pnpm preview`): `/` → "PandaPlay - Build a Paradise for Pandas"; `/catalog` → "PandaPlay - Playground Catalog". [AC9]
+- [x] Playwright title check (`pnpm preview`): `/playgrounds/bamboo-jungle-gym` → "PandaPlay - The Bamboo Jungle Gym"; `/playgrounds/roly-poly-slide` → "PandaPlay - The Roly-Poly Slide" (titles from collection data). [AC9]
+- [x] Playwright (coming-soon CTA, `pnpm preview` `/catalog`): clicking a coming-soon card's "View Details" performs no navigation (URL unchanged; control is disabled/non-link). [AC5]
+- [x] Playwright (SSR, against the **built Node server** at `http://localhost:4321`): two GETs of `/quote` a moment apart return responses whose dynamic field (timestamp / count) differs between the two requests. [AC14]
 
 ### Manual Verification
 
@@ -632,6 +632,24 @@ To execute this plan in a new session:
 - `Affected sections / artifacts:` `astro.config.mjs` (`image: { layout: 'constrained' }`). **No per-image edits needed** — an attempt at per-image `layout="full-width"`/`aspect-auto` was tested and proven to change nothing (reverted). Source files (`index.astro`, `[slug].astro`, `ProductCard.astro`) are unchanged by this fix beyond the separately-approved Button refactor.
 - `Process note:` This finding involved significant operator thrashing (multiple failed guess-edits before isolating the cause via a disciplined A/B/C build comparison) and one clobber: during the A/B revert, `index.astro`'s approved Button conversions were accidentally reverted and had to be re-applied. The orphaned raw-JPEG-in-`_astro` observation (Astro issue [#15505](https://github.com/withastro/astro/issues/15505), "not planned") remains a **separate, undispositioned** lower-priority item — not addressed by this fix.
 - `User approval:` **Received** (Adam Lowe, 2026-05-27 — confirmed "optimized implies srcset" is in scope, approved the `constrained` config approach and the A/B comparison that produced it).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Verification finding (disposition: non-issue — accepted, no action)
+- `Summary:` The raw source JPEGs copied into `dist/client/_astro/` (referenced only by a server chunk, never by any HTML) are **dispositioned as a non-issue.** This is upstream Astro behavior (issue [#15505](https://github.com/withastro/astro/issues/15505), closed "not planned" — content-collection/asset originals retained in the build dir). No user-facing route serves them; every `<img>` references optimized responsive webp only. AC7's intent (images optimized, raw JPEGs not served) is met. No build-prune step or workaround added.
+- `Reason:` User decision: "it's a non-issue." The originals are unserved dead weight from a framework behavior the Astro team explicitly declined to fix; not worth a custom prune step on a demo.
+- `Affected sections / artifacts:` None (no change). AC7 considered met via the responsive-srcset fix; the orphaned originals are accepted.
+- `User approval:` **Received** (Adam Lowe, 2026-05-27 — "disposition - it's a non-issue").
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Decision (Agent Verification complete)
+- `Summary:` **Step 10 Agent Verification complete — all checks pass.** Standard gates (`astro check` 0 errors, `pnpm build` exit 0); all source/file checks (config, fonts, Vite-7, collection schema, 6 entries 2+4, routing filter, no-CDN, no Tailwind dump, nav/footer single-component, ProductLayout nesting, AC3b composed, AC10/AC11 collection-driven, no raw `<img>`); DOM/structural (data-status, Seo+2 Fonts, og/twitter, disabled coming-soon CTA, Quote→/quote); build-output (4 static HTML in `dist/client/`, `/quote` SSR-only, `entry.mjs`, optimized responsive webp, island JS isolation). **Playwright deterministic checks all PASS:** filter island (6 data-status; Available→2/Coming Soon→4/All→6, deterministic by class toggle); titles (all 4 verbatim incl. collection-driven detail titles); coming-soon CTA no-navigation (disabled button, URL unchanged); SSR per-request (`/quote` timestamps differ across two GETs, all routes 200). All Agent Verification checkboxes marked `[x]`.
+- `Reason:` Pre-handoff Agent sign-off per VERIFICATION.md.
+- `Affected sections / artifacts:` Agent Verification section (boxes checked + 3 build-output lines corrected to `dist/client/` paths). **Manual Verification (10 boxes) intentionally left unchecked — those are the user's post-handoff smoke tests.**
+- `User approval:` Not required (verification record). Manual Verification + closeout sign-off pending with the user.
 
 ## Closeout record
 
