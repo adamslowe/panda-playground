@@ -40,7 +40,7 @@ const summaryClass = isHome ? "text-gray-600 mb-6" : "text-gray-600 mb-6 text-sm
 <div
   data-status={data.status}
   data-hide
-  class={`reveal bg-white rounded-[2.5rem] overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group ${cardBorder} ${delay}`}
+  class={`reveal flex flex-col h-full bg-white rounded-[2.5rem] overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group ${cardBorder} ${delay}`}
 >
   {
     data.status === "available" && data.image ? (
@@ -67,7 +67,7 @@ const summaryClass = isHome ? "text-gray-600 mb-6" : "text-gray-600 mb-6 text-sm
       </div>
     )
   }
-  <div class={bodyPadding}>
+  <div class={`flex flex-col flex-1 ${bodyPadding}`}>
     {
       isHome && data.badge ? (
         <div class="flex justify-between items-start mb-4">
@@ -84,12 +84,12 @@ const summaryClass = isHome ? "text-gray-600 mb-6" : "text-gray-600 mb-6 text-sm
         <Button
           href={`/playgrounds/${id}`}
           variant={isHome ? "ghost" : "primary"}
-          class="block w-full py-3"
+          class="block w-full py-3 mt-auto"
         >
           View Details
         </Button>
       ) : (
-        <Button disabled class="block w-full py-3">
+        <Button disabled class="block w-full py-3 mt-auto">
           View Details
         </Button>
       )
