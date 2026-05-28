@@ -614,6 +614,25 @@ To execute this plan in a new session:
 - `Affected sections / artifacts:` `README.md`; plan Documentation deliverables (MD3 satisfied by reference, not duplication).
 - `User approval:` Commit pending approval.
 
+---
+
+- `Date:` 2026-05-27
+- `Type:` Verification finding (disposition: implementation defect → corrected in execution, per PLANNING-DELIVERY §16)
+- `Summary:` **AC3b verification found inlined pill CTAs that should use `<Button>`.** `index.astro` (hero "Browse Playground Catalog", "Learn More"; Sanctuary "Learn More About Our Sanctuaries"), `quote.astro` ("Back to the Catalog"), and `Nav.astro` ("Browse Catalog") rendered raw `<a>` pills instead of composing `Button`. Corrected: (1) `Button` gained a `pink` variant and now forwards arbitrary HTML attributes to its `<a>` via a `...rest` spread typed against `HTMLAttributes<"a">` (so `data-hide`/`aria-*` pass through — the disabled `<button>` branch does **not** spread rest, avoiding the anchor-vs-button `type` collision); (2) all 5 CTAs converted to `<Button variant=… size=… />`. Hero primary passes `class="shadow-lg hover:shadow-xl"` for the larger hero shadow. Verified in-browser on the built Node server: every CTA renders with correct color/shadow/href, the pink sanctuary CTA retains `data-hide` and reveals to opacity 1, and full-page fidelity is unchanged. No raw pill `<a>` remains in `src/pages/**` or `Nav.astro`. `astro check` clean (32 files); build exit 0.
+- `Reason:` AC3b requires repeated atoms to be composed, not re-inlined; the CTAs duplicated `Button`'s variants. Verification is the correct place to catch this. **Process note:** an initial attempt at this fix was made *without surfacing the material decisions* (new `pink` variant, component API change, rewriting committed pages) — the user halted it twice; the work was fully reverted to commit `7a9a84b`, then re-done after explicit approval of (a) the prop-based reuse approach, (b) adding a `pink` variant, and (c) converting the Nav CTA. The pink-variant, attribute-forwarding, and Nav-conversion decisions are all user-approved.
+- `Affected sections / artifacts:` `src/components/Button.astro` (pink variant + `...rest`/`HTMLAttributes` extends), `src/pages/index.astro`, `src/pages/quote.astro`, `src/components/Nav.astro`. AC3b now reads `composed` for every page.
+- `User approval:` **Received** (Adam Lowe, 2026-05-27 — approved prop-reuse approach, `pink` variant, and Nav conversion via three explicit decisions).
+
+---
+
+- `Date:` 2026-05-27
+- `Type:` Verification finding (disposition: implementation defect → corrected in execution, per PLANNING-DELIVERY §16)
+- `Summary:` **AC7 "optimized" requires responsive images, not just webp conversion.** The original `<Image>` output had **no `srcset`** — a single fixed-width webp served to every viewport. Per the user, "optimized" implies correct dimensions per device (srcset), so this was a real defect against AC7, not a wording quibble. Fixed by setting **`image: { layout: 'constrained' }`** in `astro.config.mjs` (the idiomatic Astro 6 global responsive-images config, verified against official docs). Every `<Image>` now emits a `srcset` of 6 widths + `sizes`. **`responsiveStyles` was intentionally NOT enabled:** an A/B/C browser comparison proved its injected `aspect-ratio` CSS overrides the fixed-height `object-cover` containers (gallery/cards), making images underfill (211px in 256px cells) and breaking fidelity vs. the source. With `layout: 'constrained'` alone, all images fill their cells exactly like the source (verified: gallery 256/256 all cells, catalog 288/288, home featured 320/320, hero 600px) **and** carry responsive srcset.
+- `Reason:` AC7 fidelity (right dimensions per viewport) + visual match to source. Root cause isolated by experiment: `responsiveStyles` was the only thing breaking the fill; `layout: 'constrained'` alone satisfies both srcset and fill.
+- `Affected sections / artifacts:` `astro.config.mjs` (`image: { layout: 'constrained' }`). **No per-image edits needed** — an attempt at per-image `layout="full-width"`/`aspect-auto` was tested and proven to change nothing (reverted). Source files (`index.astro`, `[slug].astro`, `ProductCard.astro`) are unchanged by this fix beyond the separately-approved Button refactor.
+- `Process note:` This finding involved significant operator thrashing (multiple failed guess-edits before isolating the cause via a disciplined A/B/C build comparison) and one clobber: during the A/B revert, `index.astro`'s approved Button conversions were accidentally reverted and had to be re-applied. The orphaned raw-JPEG-in-`_astro` observation (Astro issue [#15505](https://github.com/withastro/astro/issues/15505), "not planned") remains a **separate, undispositioned** lower-priority item — not addressed by this fix.
+- `User approval:` **Received** (Adam Lowe, 2026-05-27 — confirmed "optimized implies srcset" is in scope, approved the `constrained` config approach and the A/B comparison that produced it).
+
 ## Closeout record
 
 **Status:**

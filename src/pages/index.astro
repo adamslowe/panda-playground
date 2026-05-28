@@ -5,6 +5,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import FeatureCard from "../components/FeatureCard.astro";
 import ProductCard from "../components/ProductCard.astro";
+import Button from "../components/Button.astro";
 import HeartIcon from "../components/icons/HeartIcon.astro";
 import BoltIcon from "../components/icons/BoltIcon.astro";
 import SmileIcon from "../components/icons/SmileIcon.astro";
@@ -36,18 +37,10 @@ const featured = (await getCollection("playgrounds"))
         happy, active, and thriving in sanctuaries worldwide.
       </p>
       <div data-hide class="reveal flex flex-col sm:flex-row gap-4 mb-16">
-        <a
-          href="/catalog"
-          class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 text-lg"
-        >
+        <Button href="/catalog" variant="primary" size="lg" class="shadow-lg hover:shadow-xl">
           Browse Playground Catalog
-        </a>
-        <a
-          href="#why-play"
-          class="bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200 px-8 py-4 rounded-full font-bold shadow-xs hover:shadow-md transition-all duration-300"
-        >
-          Learn More
-        </a>
+        </Button>
+        <Button href="#why-play" variant="secondary" size="lg">Learn More</Button>
       </div>
       <div data-hide class="reveal w-full max-w-5xl rounded-[3rem] overflow-hidden shadow-2xl relative">
         <div class="absolute inset-0 bg-green-900/10 mix-blend-multiply rounded-[3rem]"></div>
@@ -173,13 +166,9 @@ const featured = (await getCollection("playgrounds"))
             needs of rescued and breeding pandas, contributing to successful conservation efforts
             worldwide.
           </p>
-          <a
-            data-hide
-            href="#"
-            class="reveal inline-block bg-pink-500 hover:bg-pink-600 text-white px-8 py-4 rounded-full font-bold shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-          >
+          <Button href="#" variant="pink" size="lg" class="reveal" data-hide>
             Learn More About Our Sanctuaries
-          </a>
+          </Button>
         </div>
       </div>
     </div>

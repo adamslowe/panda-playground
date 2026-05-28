@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
 
 // The one on-demand (SSR) route. `prerender = false` opts this page out of the
 // default static build, so the Node adapter renders it per request — the
@@ -65,12 +66,7 @@ const playground = Astro.url.searchParams.get("playground");
       </div>
 
       <div class="text-center mt-10">
-        <a
-          href="/catalog"
-          class="inline-block bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200 px-8 py-4 rounded-full font-bold shadow-xs hover:shadow-md transition-all duration-300"
-        >
-          Back to the Catalog
-        </a>
+        <Button href="/catalog" variant="secondary" size="lg">Back to the Catalog</Button>
       </div>
     </div>
   </section>

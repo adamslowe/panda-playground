@@ -27,3 +27,10 @@ pnpm-debug.log*
 .playwright-mcp/
 *-astro.png
 home-astro-revealed.png
+
+# more playwright verification screenshots
+*-responsive.png
+gallery-*.png
+home-final.png
+source-gallery.png
+home-after-button-refactor.png

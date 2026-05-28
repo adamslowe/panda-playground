@@ -15,6 +15,16 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
+  // Make every <Image> responsive by default: `constrained` generates a
+  // srcset of multiple widths + a sizes attribute, so the browser downloads
+  // the right dimensions per viewport (genuinely optimized, not just converted
+  // to webp). responsiveStyles is intentionally OFF: its injected aspect-ratio
+  // CSS overrides our fixed-height `object-cover` containers (gallery/cards);
+  // we drive sizing with Tailwind h-full/object-cover instead.
+  image: {
+    layout: 'constrained',
+  },
+
   integrations: [preact()],
 
   // Node adapter for the one on-demand /quote route. output stays the default

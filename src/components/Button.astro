@@ -1,9 +1,16 @@
 ---
+import type { HTMLAttributes } from "astro/types";
+
 // Pill button. Renders an <a> when `href` is set, otherwise a <button>.
 // `disabled` forces the non-interactive, visibly-disabled state used by the
 // coming-soon catalog CTA (no href, no navigation — AC5).
-interface Props {
-  variant?: "primary" | "secondary" | "ghost";
+//
+// Extends anchor attributes so call sites can pass through extras (e.g.
+// `data-hide` for the reveal animation, `aria-*`, `target`). `class` is
+// declared explicitly so it merges with the variant classes instead of
+// replacing them; the rest are spread onto the rendered <a>.
+interface Props extends Omit<HTMLAttributes<"a">, "class"> {
+  variant?: "primary" | "secondary" | "ghost" | "pink";
   href?: string;
   disabled?: boolean;
   size?: "md" | "lg";
@@ -15,6 +22,7 @@ const {
   disabled = false,
   size = "md",
   class: className = "",
+  ...rest
 } = Astro.props;
 
 const base =
@@ -31,6 +39,7 @@ const variants = {
   secondary:
     "bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-200 shadow-xs hover:shadow-md",
   ghost: "bg-gray-100 hover:bg-gray-200 text-gray-900",
+  pink: "bg-pink-500 hover:bg-pink-600 text-white shadow-md hover:shadow-lg transform hover:-translate-y-1",
 };
 
 const disabledClasses = "bg-gray-100 text-gray-400 cursor-not-allowed opacity-70";
@@ -51,7 +60,7 @@ const classes = [
       <slot />
     </button>
   ) : (
-    <a href={href} class={classes}>
+    <a href={href} class={classes} {...rest}>
       <slot />
     </a>
   )
