@@ -8,13 +8,11 @@ import Button from "../../components/Button.astro";
 import CheckIcon from "../../components/icons/CheckIcon.astro";
 
 export async function getStaticPaths() {
-  const available = (await getCollection("playgrounds")).filter(
-    (p) => p.data.status === "available",
-  );
-  return available.map((entry) => ({
-    params: { slug: entry.id },
-    props: { entry },
-  }));
+    const available = (await getCollection("playgrounds")).filter((p) => p.data.status === "available");
+    return available.map((entry) => ({
+        params: { slug: entry.id },
+        props: { entry },
+    }));
 }
 
 const { entry } = Astro.props;
@@ -26,124 +24,126 @@ const statHovers = ["hover:bg-green-50", "hover:bg-amber-50 delay-100", "hover:b
 // Gallery: image + tint + span + alt supplied positionally (the schema stores
 // just the image; tints/spans/alts are presentation, as in the source).
 const galleryCells = [
-  { tint: "bg-green-100", span: "", delay: "" },
-  { tint: "bg-amber-100", span: "", delay: "delay-100" },
-  { tint: "bg-pink-100", span: "md:col-span-1 md:row-span-2", delay: "delay-200" },
-  { tint: "bg-sky-100", span: "md:col-span-2", delay: "" },
+    { tint: "bg-green-100", span: "", delay: "" },
+    { tint: "bg-amber-100", span: "", delay: "delay-100" },
+    { tint: "bg-pink-100", span: "md:col-span-1 md:row-span-2", delay: "delay-200" },
+    { tint: "bg-sky-100", span: "md:col-span-2", delay: "" },
 ];
 const gallery = data.gallery ?? [];
 ---
 
 <ProductLayout
-  title={`PandaPlay - ${data.title}`}
-  description={data.seoDescription ?? data.summary}
-  productTitle={data.title}
-  eyebrow={data.eyebrow!}
-  heroIntro={data.heroIntro!}
+    title={`PandaPlay - ${data.title}`}
+    description={data.seoDescription ?? data.summary}
+    productTitle={data.title}
+    eyebrow={data.eyebrow!}
+    heroIntro={data.heroIntro!}
 >
-  {/* Feature block: photo + heading + body + checkmark bullets, then stat row */}
-  <section class="py-20 bg-white">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
-        <div data-hide class="reveal rounded-[2.5rem] overflow-hidden shadow-xl relative h-96">
-          {
-            data.image && (
-              <Image
-                src={data.image}
-                alt={`Panda on ${data.title}`}
-                width={800}
-                height={600}
-                class="w-full h-full object-cover"
-              />
-            )
-          }
-          <div class="absolute inset-0 bg-green-900/10 mix-blend-multiply rounded-[2.5rem]"></div>
-        </div>
-        <div data-hide class="reveal">
-          <h2 class="font-display text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            {data.feature?.heading}
-          </h2>
-          <p class="text-gray-600 mb-6 leading-relaxed">{data.feature?.body}</p>
-          <ul class="space-y-4">
-            {
-              data.feature?.points.map((point) => (
-                <li class="flex items-start gap-3">
-                  <div class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0 mt-1">
-                    <CheckIcon class="w-4 h-4" />
-                  </div>
-                  <span class="text-gray-700">{point}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
-        {
-          data.stats?.map((stat, i) => (
-            <StatCard value={stat.value} label={stat.label} color={stat.color} hoverColor={statHovers[i]} />
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  {/* See It In Action gallery */}
-  <section class="py-20 bg-gray-50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <SectionHeading
-        size="md"
-        maxWidth="max-w-3xl"
-        class="mb-12"
-        title="See It In Action"
-        subtitle={`Watch how pandas navigate and enjoy the ${data.title} in our partner sanctuaries.`}
-      />
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {
-          gallery.map((img, i) => (
-            <div
-              data-hide
-              class={`reveal h-64 rounded-3xl overflow-hidden ${galleryCells[i]?.tint ?? "bg-green-100"} ${galleryCells[i]?.span ?? ""} ${galleryCells[i]?.delay ?? ""}`}
-            >
-              <Image
-                src={img}
-                alt={`${data.title} in action`}
-                width={800}
-                height={600}
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
+    {/* Feature block: photo + heading + body + checkmark bullets, then stat row */}
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+                <div data-hide class="reveal rounded-[2.5rem] overflow-hidden shadow-xl relative h-96">
+                    {
+                        data.image && (
+                            <Image
+                                src={data.image}
+                                alt={`Panda on ${data.title}`}
+                                width={800}
+                                height={600}
+                                class="w-full h-full object-cover"
+                            />
+                        )
+                    }
+                    <div class="absolute inset-0 bg-green-900/10 mix-blend-multiply rounded-[2.5rem]"></div>
+                </div>
+                <div data-hide class="reveal">
+                    <h2 class="font-display text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                        {data.feature?.heading}
+                    </h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">{data.feature?.body}</p>
+                    <ul class="space-y-4">
+                        {
+                            data.feature?.points.map((point) => (
+                                <li class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0 mt-1">
+                                        <CheckIcon class="w-4 h-4" />
+                                    </div>
+                                    <span class="text-gray-700">{point}</span>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
             </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  {/* Ready to Install CTA */}
-  <section class="py-24 bg-white relative overflow-hidden">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-      <div class="bg-gradient-to-br from-green-50 to-pink-50 rounded-[3rem] p-10 md:p-16 shadow-xl border border-green-100">
-        <h2 data-hide class="reveal font-display text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-          {data.ctaHeading}
-        </h2>
-        <p data-hide class="reveal text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-          {data.ctaBody}
-        </p>
-        <div data-hide class="reveal flex flex-col sm:flex-row gap-4 justify-center">
-          <Button href={`/quote?playground=${encodeURIComponent(data.title)}`} variant="primary" size="lg">
-            Request a Quote
-          </Button>
-          <Button href="/catalog" variant="secondary" size="lg">View Other Playgrounds</Button>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                {
+                    data.stats?.map((stat, i) => (
+                        <StatCard value={stat.value} label={stat.label} color={stat.color} hoverColor={statHovers[i]} />
+                    ))
+                }
+            </div>
         </div>
-      </div>
-    </div>
-    <div
-      class="absolute top-0 right-0 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-60 translate-x-1/3 -translate-y-1/3"
-    >
-    </div>
-    <div
-      class="absolute bottom-0 left-0 w-80 h-80 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-60 -translate-x-1/3 translate-y-1/3"
-    >
-    </div>
-  </section>
+    </section>
+
+    {/* See It In Action gallery */}
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeading
+                size="md"
+                maxWidth="max-w-3xl"
+                class="mb-12"
+                title="See It In Action"
+                subtitle={`Watch how pandas navigate and enjoy the ${data.title} in our partner sanctuaries.`}
+            />
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {
+                    gallery.map((img, i) => (
+                        <div
+                            data-hide
+                            class={`reveal h-64 rounded-3xl overflow-hidden ${galleryCells[i]?.tint ?? "bg-green-100"} ${galleryCells[i]?.span ?? ""} ${galleryCells[i]?.delay ?? ""}`}
+                        >
+                            <Image
+                                src={img}
+                                alt={`${data.title} in action`}
+                                width={800}
+                                height={600}
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                            />
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    {/* Ready to Install CTA */}
+    <section class="py-24 bg-white relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div
+                class="bg-linear-to-br from-green-50 to-pink-50 rounded-[3rem] p-10 md:p-16 shadow-xl border border-green-100"
+            >
+                <h2 data-hide class="reveal font-display text-3xl md:text-5xl font-bold text-gray-900 mb-6">
+                    {data.ctaHeading}
+                </h2>
+                <p data-hide class="reveal text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    {data.ctaBody}
+                </p>
+                <div data-hide class="reveal flex flex-col sm:flex-row gap-4 justify-center">
+                    <Button href={`/quote?playground=${encodeURIComponent(data.title)}`} variant="primary" size="lg">
+                        Request a Quote
+                    </Button>
+                    <Button href="/catalog" variant="secondary" size="lg">View Other Playgrounds</Button>
+                </div>
+            </div>
+        </div>
+        <div
+            class="absolute top-0 right-0 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-60 translate-x-1/3 -translate-y-1/3"
+        >
+        </div>
+        <div
+            class="absolute bottom-0 left-0 w-80 h-80 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-60 -translate-x-1/3 translate-y-1/3"
+        >
+        </div>
+    </section>
 </ProductLayout>
