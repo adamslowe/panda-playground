@@ -1,7 +1,7 @@
 # PLN1 - Rebuild PandaPlay static site as an idiomatic Astro demo
 
 **Date:** 2026-05-27
-**Status:** Planning
+**Status:** Complete
 **Tier:** Tier 1
 **Type:** Development
 **Program:** —
@@ -329,8 +329,8 @@ Human-judgment smoke tests the user runs after handoff. Covers what automation c
 1. Compare against `htmlsite/index.html` side-by-side.
 
 **Expected:**
-- [ ] Nav, hero (panda image, both CTAs, decorative blobs), "Why Play Matters" 3 feature cards, "Featured Playgrounds" (the 2 available products only), "Sanctuary Spotlight" (rotated 2-image grid), and footer all match the source in layout, copy, and color.
-- [ ] Featured section shows exactly the 2 available products (collection-driven). [AC11]
+- [x] Nav, hero (panda image, both CTAs, decorative blobs), "Why Play Matters" 3 feature cards, "Featured Playgrounds" (the 2 available products only), "Sanctuary Spotlight" (rotated 2-image grid), and footer all match the source in layout, copy, and color.
+- [x] Featured section shows exactly the 2 available products (collection-driven). [AC11]
 
 ##### Test 2: Catalog page + filter island
 
@@ -340,8 +340,8 @@ Human-judgment smoke tests the user runs after handoff. Covers what automation c
 2. Use the filter bar: All / Available / Coming Soon.
 
 **Expected:**
-- [ ] Grid matches the source visually; badges overlay the cards as in the source.
-- [ ] Filtering feels instant and correct; the right cards show/hide for each option.
+- [x] Grid matches the source visually; badges overlay the cards as in the source.
+- [x] Filtering feels instant and correct; the right cards show/hide for each option.
 
 ##### Test 3: Product detail pages
 
@@ -350,21 +350,21 @@ Human-judgment smoke tests the user runs after handoff. Covers what automation c
 1. Compare each against its `htmlsite/` counterpart.
 
 **Expected:**
-- [ ] Hero (eyebrow color + text: green "Bestseller" / pink "Featured Playground" [AC10]), feature block + 3 checkmark bullets, 3 stat tiles (correct numbers), "See It In Action" gallery (asymmetric grid), and "Ready to Install This Gym/Slide?" CTA all match.
+- [x] Hero (eyebrow color + text: green "Bestseller" / pink "Featured Playground" [AC10]), feature block + 3 checkmark bullets, 3 stat tiles (correct numbers), "See It In Action" gallery (asymmetric grid), and "Ready to Install This Gym/Slide?" CTA all match.
 
 ##### Test 4: Shared chrome consistency
 
 **Page:** all routes
 
 **Expected:**
-- [ ] Nav and footer are identical across every page (same component); links navigate correctly.
+- [x] Nav and footer are identical across every page (same component); links navigate correctly.
 
 ##### Test 5: Fonts
 
 **Page:** `/`
 
 **Expected:**
-- [ ] Headings render in Quicksand (`font-display`), body in Nunito Sans (`font-sans`); no fallback-font flash. (DevTools Network: no request to `fonts.googleapis.com` — fonts are self-hosted.) [AC6]
+- [x] Headings render in Quicksand (`font-display`), body in Nunito Sans (`font-sans`); no fallback-font flash. (DevTools Network: no request to `fonts.googleapis.com` — fonts are self-hosted.) [AC6]
 
 ##### Test 6: Scroll-reveal animations
 
@@ -373,7 +373,7 @@ Human-judgment smoke tests the user runs after handoff. Covers what automation c
 1. Reload and scroll down each page.
 
 **Expected:**
-- [ ] Elements fade+slide in on scroll; no flash of fully-visible content before they animate (flicker-free). [AC8]
+- [x] Elements fade+slide in on scroll; no flash of fully-visible content before they animate (flicker-free). [AC8]
 
 ##### Test 7: SSR vs SSG contrast (the demo beat)
 
@@ -384,8 +384,8 @@ Human-judgment smoke tests the user runs after handoff. Covers what automation c
 3. Reach `/quote` via a detail page's "Request a Quote" button.
 
 **Expected:**
-- [ ] The dynamic value changes on each reload (server-rendered per request).
-- [ ] Static routes exist as files in `dist/`; `/quote` does not — it's computed by the Node server. [AC14]
+- [x] The dynamic value changes on each reload (server-rendered per request).
+- [x] Static routes exist as files in `dist/`; `/quote` does not — it's computed by the Node server. [AC14]
 
 ## Acceptance approval record
 
@@ -653,12 +653,12 @@ To execute this plan in a new session:
 
 ## Closeout record
 
-**Status:**
-**Owner verification date:**
-**Owner approval status:**
-**Owner approval notes:**
-**Verification completed:**
-**Documentation updated:**
+**Status:** Complete
+**Owner verification date:** 2026-05-27
+**Owner approval status:** Approved
+**Owner approval notes:** Adam Lowe — "manual verification complete and approved" (2026-05-27). Plan delivered: 4 static SSG routes + 1 SSR route, fully composed component kit (no inlined atoms), collection-driven content (6 entries), responsive `<Image>` with srcset, self-hosted Astro Fonts API, Preact catalog-filter island. Multiple in-flight improvements were approved during execution (e.g. AC3b CTA refactor with `pink` Button variant + attribute forwarding; responsive-image `srcset` via `image.layout: 'constrained'`; ProductCard button-bottom alignment; Pinegrow line removed; SSR port corrected to default 4321; build paths corrected to `dist/client/`). The orphaned raw-source-JPEG-in-`_astro` observation (upstream Astro behavior, [#15505](https://github.com/withastro/astro/issues/15505)) was dispositioned a non-issue (no HTML references it; pages serve only optimized webp).
+**Verification completed:** Agent Verification — all checkboxes `[x]`, all checks passed (standard gates, source/file, DOM/structural, build-output, Playwright). Manual Verification — all 10 tests checked and approved by the owner.
+**Documentation updated:** README rewritten as PandaPlay presenter cheat-sheet (commit `7a9a84b`). Plan body amended in-place to absorb every recorded execution-time deviation (fonts API top-level, port 4321, `dist/client/` paths, AC3b/AC7 dispositions, etc.).
 **Requirements updated:** N/A (no requirements catalog)
 **Changelog / decisions updated:** N/A (no changelog)
-**Archived:**
+**Archived:** Plan remains at `.docs/plans/PLN1-20260527-astro-pandaplay-rebuild-index.md`; handoff at `.docs/handoff/handoff-20260527a.md`. No companion artifacts to archive together (Tier 1, single-document plan).
