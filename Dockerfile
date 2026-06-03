@@ -1,21 +1,9 @@
-# Use the Node alpine official image
-# https://hub.docker.com/_/node
-FROM node:lts-alpine
-
-# Create and change to the app directory.
+FROM node:lts AS build
 WORKDIR /app
-
-# Copy the files to the container image
-COPY package*.json ./
-
-# Install packages
-RUN npm ci
-
-# Copy local code to the container image.
-COPY . ./
-
-# Build the app.
+COPY . .
+RUN npm i
 RUN npm run build
 
-# Serve the app
-CMD ["npm", "run", "start"]
+FROM httpd:2.4 AS runtime
+COPY --from=build /app/dist /usr/local/apache2/htdocs/
+EXPOSE 80
