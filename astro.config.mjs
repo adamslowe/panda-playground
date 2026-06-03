@@ -13,17 +13,11 @@ export default defineConfig({
 
     vite: {
         plugins: [tailwindcss()],
-        preview: {
-            port: 3000,
-            host: true, // This enables listening on all network interfaces
-        },
-        server: {
-            // Also add this for development server
-            host: true, // This enables listening on all network interfaces
-            port: 3000,
-        },
     },
-
+    output: "static",
+    server: {
+        host: "0.0.0.0",
+    },
     // Make every <Image> responsive by default: `constrained` generates a
     // srcset of multiple widths + a sizes attribute, so the browser downloads
     // the right dimensions per viewport (genuinely optimized, not just converted
